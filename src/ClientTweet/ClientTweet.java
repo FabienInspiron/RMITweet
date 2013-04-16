@@ -30,8 +30,6 @@ public class ClientTweet {
 			Personne p = new Personne("f4bien", "fabien", "trux", "1234");
 			Tweet t1 = new Tweet("test", "Voici un message", p);
 			
-			System.out.println(cd.connexion("f4bien", "1234"));
-			
 			cd.addTweet(t1);
 			
 		} catch (MalformedURLException e) {

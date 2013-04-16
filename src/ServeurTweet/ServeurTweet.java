@@ -16,6 +16,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.w3c.dom.ls.LSInput;
 
@@ -25,6 +26,12 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	
 	private ArrayList<Tweet> listeTweet;
 	private ArrayList<Personne> listePersonne;
+	
+	/**
+	 * Un personne peut suivre ce que fait un autre personne
+	 * Ce sont des followers
+	 */
+	private HashMap<Personne, ArrayList<Personne>> listeFollower;
 	
 	File fichierTweet = new File("tweets.txt");
 	File fichierPersonnes = new File("personnes.txt");
@@ -41,7 +48,6 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * @param t
 	 */
 	public void addTweet(Tweet t){
-		System.out.println("Ajout d'un tweet");
 		listeTweet.add(t);
 	}
 	
@@ -51,6 +57,47 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 */
 	public void addPersonne(Personne p){
 		listePersonne.add(p);
+	}
+	
+	
+	/**
+	 * Gestion des followers
+	 */
+	
+	/**
+	 * Demande pour suivre la personne p
+	 * @param p est la personne que l'ont veut suivre
+	 * @param personneToFollow est la personne a suivre
+	 */
+	public void addFollower(Personne p, Personne personneToFollow){
+		if(listeFollower.containsKey(personneToFollow)){
+			ArrayList<Personne> arr = listeFollower.get(personneToFollow);
+			arr.add(p);
+		}else{
+			ArrayList<Personne> arr = new ArrayList<Personne>();
+			arr.add(p);
+			listeFollower.put(personneToFollow, arr);
+		}
+	}
+	
+	/**
+	 * Envoi d'un message aux followers de la personne p
+	 * @param p
+	 */
+	public void sendToFollowers(Personne p, Tweet t){
+		ArrayList<Personne> array = listeFollower.get(p);
+		for (Personne personne : array) {
+			send(personne, t);
+		}
+	}
+	
+	/**
+	 * Envoi d'un tweet a la personne p
+	 * @param p
+	 * @param t
+	 */
+	public void send(Personne p, Tweet t){
+		System.out.println("Envoi d'un tweet");
 	}
 	
 	/**
@@ -63,21 +110,24 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	}
 	
 	/**
-	 * Savoir si la personne avec le pseudo login peut se connecter
+	 * Demande de connexion de la part d'un client
+	 * Le serveur verifie sa persence dans la base de donnée
 	 * @param login
 	 * @param mdp
 	 * @return
 	 */
 	public boolean connexion(String login, String mdp){
 		for (Personne p : listePersonne) {
-			if(p.getPseudo().equals(login))
-				if(p.getMdp().equals(mdp))
-					return true;
+			if(p.connect(login, mdp))
+				return true;
 		}
 		
 		return false;
 	}
 		
+	/**
+	 * Relayer un tweet permet de faire comme si c'etait lui qui avait envoyé le tweet
+	 */
 	public void relayerTweet(Tweet t, Personne p){
 		t.personne = p;
 		listeTweet.add(t);

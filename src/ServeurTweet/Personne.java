@@ -12,6 +12,7 @@ public class Personne implements Serializable{
 	private String nom;
 	private String prenom;
 	private String mdp;
+	private boolean IsConnect;
 
 	/**
 	 * Constructeur normal de personne
@@ -30,12 +31,28 @@ public class Personne implements Serializable{
 	public String toString() {
 		return "Pseudo : " + pseudo + "\nNom : " + nom + "\nPrenom : " + prenom;
 	}
-
-	public String getPseudo() {
-		return pseudo;
+	
+	/**
+	 * Demande de connexion pour une personne
+	 * @param login
+	 * @param mdp
+	 * @return
+	 */
+	public boolean connect(String login, String mdp){
+		if(this.pseudo.equals(login))
+			if(this.mdp.equals(mdp)){
+				IsConnect = true;
+				return true;
+			}
+		
+		return false;
+		
 	}
-
-	public String getMdp() {
-		return mdp;
+	
+	/**
+	 * Demande de deconnexion
+	 */
+	public void disconect(){
+		IsConnect= false;
 	}
 }
