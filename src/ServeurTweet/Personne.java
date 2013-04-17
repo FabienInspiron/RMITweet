@@ -1,6 +1,9 @@
 package ServeurTweet;
 
 import java.io.Serializable;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Definition de la classe personne
@@ -13,6 +16,7 @@ public class Personne implements Serializable{
 	private String prenom;
 	private String mdp;
 	private boolean IsConnect;
+	private InetAddress Ip;
 
 	/**
 	 * Constructeur normal de personne
@@ -54,5 +58,18 @@ public class Personne implements Serializable{
 	 */
 	public void disconect(){
 		IsConnect= false;
+	}
+	
+	/**
+	 * Modification de l'adresse IP du client
+	 * @param adresseIP
+	 */
+	public void setAdresseIp(){
+		try {
+			Ip =InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

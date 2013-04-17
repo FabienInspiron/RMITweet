@@ -12,7 +12,13 @@ import ServeurTweet.Tweet;
 
 public class ClientTweet {
 	public static final int PORT = 2003;
+	
+	/**
+	 * Le client est une personnne
+	 * Il est initialisé lorcequ'il se connect
+	 */
 	private Personne pers;
+	
 	private RMITweetInterface interfTweet;
 	
 	public ClientTweet(){
@@ -29,6 +35,7 @@ public class ClientTweet {
 			e.printStackTrace();
 		}
 		System.out.println("Client connecté");
+		pers = null;
 	}
 	
 	public static void main(String[] args) {
