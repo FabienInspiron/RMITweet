@@ -1,16 +1,13 @@
 package ServeurTweet;
 
-import java.awt.List;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -18,10 +15,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.w3c.dom.ls.LSInput;
-
 public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterface{
 	
+	private static final long serialVersionUID = 1L;
+
 	public static final int PORT = 2003;
 	
 	private ArrayList<Tweet> listeTweet;
@@ -116,13 +113,13 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * @param mdp
 	 * @return
 	 */
-	public boolean connexion(String login, String mdp){
+	public Personne connexion(String login, String mdp){
 		for (Personne p : listePersonne) {
 			if(p.connect(login, mdp))
-				return true;
+				return p;
 		}
 		
-		return false;
+		return null;
 	}
 		
 	/**

@@ -12,26 +12,12 @@ import ServeurTweet.Tweet;
 
 public class ClientTweet {
 	public static final int PORT = 2003;
+	private Personne pers;
+	private RMITweetInterface interfTweet;
 	
-	public static void main(String[] args) {
+	public ClientTweet(){
 		try {
-			/*
-			 // Assign security manager
-		    if (System.getSecurityManager() == null)
-		    {
-		        System.setSecurityManager   (new RMISecurityManager());
-		    }
-		    */
-			
-			RMITweetInterface cd = (RMITweetInterface) Naming.lookup("rmi://localhost:"+PORT+"/MonOD");
-			
-			System.out.println("Lancement du client ...");
-			
-			Personne p = new Personne("f4bien", "fabien", "trux", "1234");
-			Tweet t1 = new Tweet("test", "Voici un message", p);
-			
-			cd.addTweet(t1);
-			
+			interfTweet = (RMITweetInterface) Naming.lookup("rmi://localhost:"+PORT+"/MonOD");		
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,6 +29,19 @@ public class ClientTweet {
 			e.printStackTrace();
 		}
 		System.out.println("Client connecté");
+	}
+	
+	public static void main(String[] args) {
+		ClientTweet cl1 = new ClientTweet();
+	}
+	
+	public void Connexion(String login, String mdp){
+		try {
+			pers = interfTweet.connexion(login, mdp);
+		} catch (RemoteException e) {
+			System.out.println("Impossible de se connecter");
+			e.printStackTrace();
+		}
 	}
 }
 
