@@ -27,6 +27,6 @@ public class Tweet implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Tweet : #" + topic + "\nMessage : " + message + "\nPersonne : " + personne;
+		return "Tweet : \n#" + topic + "\nMessage : " + message + "\nPersonne : " + personne;
 	}
 }

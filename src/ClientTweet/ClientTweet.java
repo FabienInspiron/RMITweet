@@ -40,11 +40,14 @@ public class ClientTweet {
 	
 	public static void main(String[] args) {
 		ClientTweet cl1 = new ClientTweet();
+		cl1.Connexion("f4bien", "1234");
 	}
 	
 	public void Connexion(String login, String mdp){
 		try {
 			pers = interfTweet.connexion(login, mdp);
+			pers.setAdresseIp();
+			System.out.println("Vous êtes maintenant connecté : " + pers.getPrenonNom());
 		} catch (RemoteException e) {
 			System.out.println("Impossible de se connecter");
 			e.printStackTrace();

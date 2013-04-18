@@ -72,4 +72,12 @@ public class Personne implements Serializable{
 			e.printStackTrace();
 		}
 	}
+	
+	public String getPrenonNom(){
+		return prenom + " " + nom;
+	}
+	
+	public String getPseudo(){
+		return pseudo;
+	}
 }

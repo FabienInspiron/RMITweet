@@ -1,5 +1,6 @@
 package ServeurTweet;
 
+import java.awt.List;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -113,7 +114,7 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * @param mdp
 	 * @return
 	 */
-	public Personne connexion(String login, String mdp){
+	public Personne connexion(String login, String mdp) throws RemoteException{
 		for (Personne p : listePersonne) {
 			if(p.connect(login, mdp))
 				return p;
@@ -138,47 +139,47 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		listeTweet.remove(t);
 	}
 	
-	/**
-	 * Sauvergarder les tweets dans le fichier
-	 */
-	private void store(File fichier, ArrayList array){
+	private void storeTweet(){
 		try {
-			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fichier));
-			os.writeObject(array);
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fichierTweet));
+			os.writeObject(listeTweet);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * Recuperer les tweet dans le fichiers pour initialiser la liste
-	 */
-	private void load(File fichier, ArrayList array){
+	private void storePersonne(){
 		try {
-			ObjectInputStream is = new ObjectInputStream(new FileInputStream(fichier));
-			array = (ArrayList) is.readObject();
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fichierPersonnes));
+			os.writeObject(listePersonne);
 		} catch (IOException e) {
-			array = new ArrayList();
-		} catch (ClassNotFoundException e) {
-			array = new ArrayList();
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
-	private void storeTweet(){
-		store(fichierTweet, listeTweet);
-	}
-	
-	private void storePersonne(){
-		store(fichierPersonnes, listePersonne);
-	}
-	
 	private void loadTweet(){
-		load(fichierTweet, listeTweet);
+		try {
+			ObjectInputStream is = new ObjectInputStream(new FileInputStream(fichierTweet));
+			listeTweet = (ArrayList<Tweet>) is.readObject();
+		} catch (IOException e) {
+			listeTweet = new ArrayList<Tweet>();
+		} catch (ClassNotFoundException e) {
+			listeTweet = new ArrayList<Tweet>();
+		}
 	}
+	
 	
 	private void loadPersonne(){
-		load(fichierPersonnes, listePersonne);
+		try {
+			ObjectInputStream is = new ObjectInputStream(new FileInputStream(fichierPersonnes));
+			listePersonne = (ArrayList<Personne>) is.readObject();
+		} catch (IOException e) {
+			listePersonne = new ArrayList<Personne>();
+		} catch (ClassNotFoundException e) {
+			listePersonne = new ArrayList<Personne>();
+		}
 	}
 	
 	/**
@@ -200,12 +201,12 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		System.out.println("\n");
 	}
 	
-	public static void main(String[] args) {
+	public static void main1(String[] args) {
 		ServeurTweet s;
 		try {
 			s = new ServeurTweet();
 			
-			Personne p1 = new Personne("f4bien", "fabien", "tutu", "1234");
+			/*Personne p1 = new Personne("f4bien", "fabien", "tutu", "1234");
 			Tweet t1 = new Tweet("topic","message", p1);
 			
 			s.addPersonne(p1);
@@ -213,6 +214,8 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 			
 			System.out.println(s.listePersonne.size());
 			System.out.println(s.listeTweet.size());
+			*/
+			
 			s.close();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -221,11 +224,11 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		
 	}
 	
-	public static void main2(String[] args) {
+	public static void main(String[] args) {
 		RMITweetInterface rm;
 		try {
 			Registry reg=LocateRegistry.createRegistry(PORT);
-			
+
 			/*
 			 // Assign security manager
 		    if (System.getSecurityManager() == null)
@@ -251,5 +254,22 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		}finally{
 			//rm.close();
 		}
+	}
+
+	@Override
+	public void inscription(Personne p) throws RemoteException {
+		if(!alreadyLogin(p.getPseudo()))
+			listePersonne.add(p);
+		else
+			throw new RemoteException();
+	}
+	
+	public boolean alreadyLogin(String login){
+		for (Personne p : listePersonne) {
+			if(p.getPseudo().equals(login))
+				return false;
+		}
+		
+		return true;
 	}
 }
