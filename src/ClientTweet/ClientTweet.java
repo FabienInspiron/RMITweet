@@ -38,11 +38,11 @@ public class ClientTweet {
 		pers = null;
 	}
 	
-	public static void main(String[] args) {
-		ClientTweet cl1 = new ClientTweet();
-		cl1.Connexion("f4bien", "1234");
-	}
-	
+	/**
+	 * Connexion au client
+	 * @param login
+	 * @param mdp
+	 */
 	public void Connexion(String login, String mdp){
 		try {
 			pers = interfTweet.connexion(login, mdp);
@@ -50,6 +50,27 @@ public class ClientTweet {
 			System.out.println("Vous êtes maintenant connecté : " + pers.getPrenonNom());
 		} catch (RemoteException e) {
 			System.out.println("Impossible de se connecter");
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Recuperation de l'interface de communication avec le serveur
+	 * @return
+	 */
+	public RMITweetInterface getInterface(){
+		return interfTweet;
+	}
+
+	
+	public static void main(String[] args) {
+		ClientTweet cl1 = new ClientTweet();
+		cl1.Connexion("f4bien", "1234");
+		Tweet t1 = new Tweet("#Rien", "de nouveau", cl1.pers);
+		try {
+			cl1.getInterface().Tweeter(t1);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

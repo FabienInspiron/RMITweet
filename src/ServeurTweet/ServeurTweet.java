@@ -45,8 +45,9 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * Ajouter un tweet a la liste
 	 * @param t
 	 */
-	public void addTweet(Tweet t){
+	public void Tweeter(Tweet t){
 		listeTweet.add(t);
+		System.out.println("Nouveau tweet ajouté");
 	}
 	
 	/**
@@ -168,6 +169,8 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		} catch (ClassNotFoundException e) {
 			listeTweet = new ArrayList<Tweet>();
 		}
+		
+		System.out.println("Fichier tweet chargé : " + listeTweet.size() + " lignes");
 	}
 	
 	
@@ -180,6 +183,8 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		} catch (ClassNotFoundException e) {
 			listePersonne = new ArrayList<Personne>();
 		}
+		
+		System.out.println("Fichier personne chargé : " + listePersonne.size() + " lignes");
 	}
 	
 	/**
@@ -201,20 +206,16 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		System.out.println("\n");
 	}
 	
-	public static void main1(String[] args) {
+	public static void main2(String[] args) {
 		ServeurTweet s;
 		try {
 			s = new ServeurTweet();
 			
-			/*Personne p1 = new Personne("f4bien", "fabien", "tutu", "1234");
+			Personne p1 = new Personne("f4bien", "fabien", "tutu", "1234");
 			Tweet t1 = new Tweet("topic","message", p1);
 			
 			s.addPersonne(p1);
-			s.addTweet(t1);
-			
-			System.out.println(s.listePersonne.size());
-			System.out.println(s.listeTweet.size());
-			*/
+			s.Tweeter(t1);
 			
 			s.close();
 		} catch (RemoteException e) {
@@ -241,7 +242,6 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 			
 			try {
 				Naming.rebind("rmi://localhost:"+PORT+"/MonOD", rm);
-				
 				System.out.println("Serveur lancé sur le port " + PORT);
 				
 			} catch (MalformedURLException e) {
