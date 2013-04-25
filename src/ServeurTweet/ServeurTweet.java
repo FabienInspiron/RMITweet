@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -15,8 +16,13 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
-public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterface{
+import javax.management.OperationsException;
+
+import ClientTweet.ClientTweet;
+
+public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfaceDeConnexion, RMITweetInterfaceTweet{
 	
 	private static final long serialVersionUID = 1L;
 
@@ -111,17 +117,20 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	/**
 	 * Demande de connexion de la part d'un client
 	 * Le serveur verifie sa persence dans la base de donnée
+	 * Retourne l'interface de tweet
 	 * @param login
 	 * @param mdp
 	 * @return
 	 */
-	public Personne connexion(String login, String mdp) throws RemoteException{
+	public RMITweetInterfaceTweet connexion(String login, String mdp) throws RemoteException, ConnexionException{
 		for (Personne p : listePersonne) {
-			if(p.connect(login, mdp))
-				return p;
+			if(p.connect(login, mdp)){
+				RMITweetInterfaceTweet rmico = new ServeurTweet();
+				return rmico;
+			}
 		}
 		
-		return null;
+		throw new ConnexionException();
 	}
 		
 	/**
@@ -132,6 +141,11 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		listeTweet.add(t);
 	}
 	
+	@Override
+	public void Follower(Personne p, ClientTweet cl) throws RemoteException {
+		addFollower(p, cl.getPersonne());		
+	}
+
 	/**
 	 * Supprimer un tweet de la liste
 	 * @param t
@@ -206,7 +220,7 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		System.out.println("\n");
 	}
 	
-	public static void main2(String[] args) {
+	public static void main1(String[] args) {
 		ServeurTweet s;
 		try {
 			s = new ServeurTweet();
@@ -226,7 +240,7 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	}
 	
 	public static void main(String[] args) {
-		RMITweetInterface rm;
+		RMITweetInterfaceDeConnexion rm;
 		try {
 			Registry reg=LocateRegistry.createRegistry(PORT);
 
@@ -271,5 +285,16 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		}
 		
 		return true;
+	}
+
+	@Override
+	public Personne getPersonne(String login, String mdp) throws RemoteException{
+		for (Personne p : listePersonne) {
+			if(p.connect(login, mdp)){
+				return p;
+			}
+		}
+		
+		return null;
 	}
 }
