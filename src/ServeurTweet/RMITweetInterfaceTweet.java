@@ -16,7 +16,7 @@ public interface RMITweetInterfaceTweet extends Remote{
 	 * @param t
 	 * @throws RemoteException
 	 */
-	public void Tweeter(Tweet t) throws RemoteException;
+	public void Tweeter(Tweet t, Personne p) throws RemoteException;
 	
 	/**
 	 * Relayer un tweet, c'est comme si cette personne l'avait envoyé

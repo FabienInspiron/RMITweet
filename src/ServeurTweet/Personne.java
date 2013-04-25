@@ -80,4 +80,12 @@ public class Personne implements Serializable{
 	public String getPseudo(){
 		return pseudo;
 	}
+	
+	public void connect(){
+		IsConnect = true;
+	}
+	
+	public void disconnect(){
+		IsConnect = false;
+	}
 }

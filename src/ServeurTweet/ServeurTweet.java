@@ -51,9 +51,10 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * Ajouter un tweet a la liste
 	 * @param t
 	 */
-	public void Tweeter(Tweet t){
+	public void Tweeter(Tweet t, Personne p){
 		listeTweet.add(t);
-		System.out.println("Nouveau tweet ajouté");
+		System.out.println(p.getPrenonNom() + " a ajouté un nouveau tweet");
+		sendToFollowers(p, t);
 	}
 	
 	/**
@@ -125,6 +126,7 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	public RMITweetInterfaceTweet connexion(String login, String mdp) throws RemoteException, ConnexionException{
 		for (Personne p : listePersonne) {
 			if(p.connect(login, mdp)){
+				p.connect();
 				RMITweetInterfaceTweet rmico = new ServeurTweet();
 				return rmico;
 			}
@@ -229,7 +231,7 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 			Tweet t1 = new Tweet("topic","message", p1);
 			
 			s.addPersonne(p1);
-			s.Tweeter(t1);
+			s.Tweeter(t1, p1);
 			
 			s.close();
 		} catch (RemoteException e) {
@@ -296,5 +298,9 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void logOff(Personne p) throws RemoteException {
 	}
 }

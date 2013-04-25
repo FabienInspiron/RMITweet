@@ -75,7 +75,8 @@ public class ClientTweet implements Serializable{
 			
 			cl1.Connexion("f4bien", "12234");
 			Tweet t1 = new Tweet("#Rien", "de nouveau", cl1.pers);
-			cl1.interfTweet.Tweeter(t1);
+			cl1.interfTweet.Tweeter(t1, cl1.getPersonne());
+			cl1.interfConnexion.logOff(cl1.pers);
 			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

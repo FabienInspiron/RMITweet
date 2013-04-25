@@ -30,4 +30,11 @@ public interface RMITweetInterfaceDeConnexion extends Remote{
 	 * @throws RemoteException
 	 */
 	public void inscription(Personne p) throws RemoteException;
+	
+	/**
+	 * Permet à une personne de se deconnecter
+	 * @param p
+	 * @throws RemoteException
+	 */
+	public void logOff(Personne p) throws RemoteException;
 }
