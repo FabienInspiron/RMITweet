@@ -4,16 +4,17 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 import ServeurTweet.ConnexionException;
 import ServeurTweet.Personne;
+import ServeurTweet.RMITweetInterfaceClient;
 import ServeurTweet.RMITweetInterfaceDeConnexion;
 import ServeurTweet.RMITweetInterfaceTweet;
 import ServeurTweet.Tweet;
 
-public class ClientTweet implements Serializable{
+public class ClientTweet extends UnicastRemoteObject implements Serializable, RMITweetInterfaceClient{
 	public static final int PORT = 2003;
 	
 	/**
@@ -25,7 +26,8 @@ public class ClientTweet implements Serializable{
 	private RMITweetInterfaceDeConnexion interfConnexion;
 	private RMITweetInterfaceTweet interfTweet;
 	
-	public ClientTweet(){
+	public ClientTweet() throws RemoteException{
+		super();
 		try {
 			interfConnexion = (RMITweetInterfaceDeConnexion) Naming.lookup("rmi://localhost:"+PORT+"/MonOD");		
 		} catch (MalformedURLException e) {
@@ -51,10 +53,7 @@ public class ClientTweet implements Serializable{
 	 */
 	public void Connexion(String login, String mdp) throws ConnexionException{
 		try {
-			interfTweet = interfConnexion.connexion(login, mdp);
-			if(interfTweet != null){
-				pers = interfConnexion.getPersonne(login, mdp);
-			}
+			interfTweet = interfConnexion.connexion(login, mdp, this);
 		} catch (RemoteException e) {
 			System.out.println("Impossible de se connecter");
 			e.printStackTrace();
@@ -70,13 +69,13 @@ public class ClientTweet implements Serializable{
 	}
 	
 	public static void main(String[] args) {
-		ClientTweet cl1 = new ClientTweet();
+		ClientTweet cl1 = null;
 		try {
-			
+			cl1 = new ClientTweet();
 			cl1.Connexion("f4bien", "12234");
 			Tweet t1 = new Tweet("#Rien", "de nouveau", cl1.pers);
-			cl1.interfTweet.Tweeter(t1, cl1.getPersonne());
-			cl1.interfConnexion.logOff(cl1.pers);
+			cl1.interfTweet.Tweeter(t1, cl1);
+			cl1.interfConnexion.logOff(cl1);
 			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -88,6 +87,12 @@ public class ClientTweet implements Serializable{
 	
 	public Personne getPersonne(){
 		return pers;
+	}
+
+	@Override
+	public void afficherTweetRecu(Tweet t) {
+		System.out.println("Vous avez reçu un tweet : ");
+		System.out.println(t);
 	}
 }
 

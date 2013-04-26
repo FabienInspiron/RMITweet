@@ -16,7 +16,7 @@ public interface RMITweetInterfaceTweet extends Remote{
 	 * @param t
 	 * @throws RemoteException
 	 */
-	public void Tweeter(Tweet t, Personne p) throws RemoteException;
+	public void Tweeter(Tweet t, ClientTweet p) throws RemoteException;
 	
 	/**
 	 * Relayer un tweet, c'est comme si cette personne l'avait envoyé
@@ -24,12 +24,12 @@ public interface RMITweetInterfaceTweet extends Remote{
 	 * @param p
 	 * @throws RemoteException
 	 */
-	public void relayerTweet(Tweet t, Personne p) throws RemoteException;
+	public void relayerTweet(Tweet t, ClientTweet p) throws RemoteException;
 	
 	/**
 	 * Follower un tweet c'est s'incrire pour suivre ce qu'envoi une personne
 	 * @param p
 	 * @throws RemoteException
 	 */
-	public void Follower(Personne p, ClientTweet c) throws RemoteException;
+	public void Follower(ClientTweet p, ClientTweet c) throws RemoteException;
 }

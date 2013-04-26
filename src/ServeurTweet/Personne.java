@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
  *
  */
 public class Personne implements Serializable{
+	
 	private String pseudo;
 	private String nom;
 	private String prenom;
