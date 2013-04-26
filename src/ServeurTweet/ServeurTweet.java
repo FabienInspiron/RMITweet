@@ -1,13 +1,11 @@
 package ServeurTweet;
 
-import java.awt.List;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -16,26 +14,24 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
-
-import javax.management.OperationsException;
 
 import ClientTweet.ClientTweet;
+import ClientTweet.InterfaceClient;
 
-public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfaceDeConnexion, RMITweetInterfaceTweet{
+public class ServeurTweet extends UnicastRemoteObject implements InterfacePublic, InterfacePrivee{
 	
 	private static final long serialVersionUID = 1L;
 	
 	public static final int PORT = 2003;
 	
 	private ArrayList<Tweet> listeTweet;
-	private ArrayList<ClientTweet> listePersonne;
+	private ArrayList<Personne> listePersonne;
 	
 	/**
 	 * Un personne peut suivre ce que fait un autre personne
 	 * Ce sont des followers
 	 */
-	private HashMap<ClientTweet, ArrayList<ClientTweet>> listeFollower;
+	private HashMap<Personne, ArrayList<ClientTweet>> listeFollower;
 	
 	/**
 	 *  Liste des fichiers pour la sauvegarde
@@ -49,7 +45,9 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 */
 	protected ServeurTweet() throws RemoteException {
 		listeTweet = new ArrayList<Tweet>();
-		listePersonne = new ArrayList<ClientTweet>();
+		listePersonne = new ArrayList<Personne>();
+		listeFollower = new HashMap<Personne, ArrayList<ClientTweet>>();
+		
 		loadTweet();
 		loadPersonne();
 	}
@@ -58,17 +56,23 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * Ajouter un tweet a la liste
 	 * @param t
 	 */
-	public void Tweeter(Tweet t, ClientTweet c){
+	public void Tweeter(Tweet t, InterfaceClient c){
 		listeTweet.add(t);
-		System.out.println(c.getPersonne().getPrenonNom() + " a ajouté un nouveau tweet");
-		sendToFollowers(c, t);
+		try {
+			//System.out.println(c.getPersonne().getPrenonNom() + " a ajouté un nouveau tweet");
+			c.afficherTweetRecu(t);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//sendToFollowers(c.getPersonne(), t);
 	}
 	
 	/**
 	 * Ajouter une personne a la liste
 	 * @param p
 	 */
-	public void addPersonne(ClientTweet p){
+	public void addPersonne(Personne p){
 		listePersonne.add(p);
 	}
 	
@@ -77,14 +81,14 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * @param p est la personne que l'ont veut suivre
 	 * @param personneToFollow est la personne a suivre
 	 */
-	public void addFollower(ClientTweet p, ClientTweet personneToFollow){
-		if(listeFollower.containsKey(personneToFollow)){
-			ArrayList<ClientTweet> arr = listeFollower.get(personneToFollow);
-			arr.add(p);
+	public void addFollower(Personne p, ClientTweet cl){
+		if(listeFollower.containsKey(p)){
+			ArrayList<ClientTweet> arr = listeFollower.get(p);
+			arr.add(cl);
 		}else{
 			ArrayList<ClientTweet> arr = new ArrayList<ClientTweet>();
-			arr.add(p);
-			listeFollower.put(personneToFollow, arr);
+			arr.add(cl);
+			listeFollower.put(p, arr);
 		}
 	}
 	
@@ -92,7 +96,7 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * Envoi d'un message aux followers de la personne p
 	 * @param p
 	 */
-	public void sendToFollowers(ClientTweet p, Tweet t){
+	public void sendToFollowers(Personne p, Tweet t){
 		ArrayList<ClientTweet> array = listeFollower.get(p);
 		for (ClientTweet personne : array) {
 			send(personne, t);
@@ -107,7 +111,7 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * @param t
 	 */
 	public void send(ClientTweet p, Tweet t){
-		p.afficherTweetRecu(t);
+		//p.afficherTweetRecu(t);
 	}
 	
 	/**
@@ -127,11 +131,12 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	 * @param mdp
 	 * @return
 	 */
-	public RMITweetInterfaceTweet connexion(String login, String mdp, ClientTweet cl) throws RemoteException, ConnexionException{
-		for (ClientTweet p : listePersonne) {
-			if(p.getPersonne().connect(login, mdp)){
-				p.getPersonne().connect();
-				RMITweetInterfaceTweet rmico = new ServeurTweet();
+	public InterfacePrivee connexion(String login, String mdp) throws RemoteException, ConnexionException{
+		for (Personne p : listePersonne) {
+			if(p.connect(login, mdp)){
+				p.connect();
+				//cl.setPersonne(p);
+				InterfacePrivee rmico = new ServeurTweet();
 				return rmico;
 			}
 		}
@@ -142,8 +147,8 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	/**
 	 * Relayer un tweet permet de faire comme si c'etait lui qui avait envoyé le tweet
 	 */
-	public void relayerTweet(Tweet t, Personne p){
-		t.personne = p;
+	public void relayerTweet(Tweet t, ClientTweet p){
+		//t.personne = p.getPersonne();
 		listeTweet.add(t);
 	}
 	
@@ -163,7 +168,7 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	}
 	
 	@Override
-	public void Follower(ClientTweet p, ClientTweet cl) throws RemoteException {
+	public void Follower(Personne p, ClientTweet cl) throws RemoteException {
 		addFollower(p, cl);		
 	}
 
@@ -212,11 +217,11 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	private void loadPersonne(){
 		try {
 			ObjectInputStream is = new ObjectInputStream(new FileInputStream(fichierPersonnes));
-			listePersonne = (ArrayList<ClientTweet>) is.readObject();
+			listePersonne = (ArrayList<Personne>) is.readObject();
 		} catch (IOException e) {
-			listePersonne = new ArrayList<ClientTweet>();
+			listePersonne = new ArrayList<Personne>();
 		} catch (ClassNotFoundException e) {
-			listePersonne = new ArrayList<ClientTweet>();
+			listePersonne = new ArrayList<Personne>();
 		}
 		
 		System.out.println("Fichier personne chargé : " + listePersonne.size() + " lignes");
@@ -241,6 +246,53 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		System.out.println("\n");
 	}
 	
+
+	/**
+	 * Inscription de la personne a la base de donnée des personnes
+	 */
+	@Override
+	public void inscription(Personne p) throws RemoteException {
+		//if(!alreadyLogin(p.getPseudo()))
+			listePersonne.add(p);
+			System.out.println("Inscription d'un client : " + p.getPrenonNom());
+	}
+	
+	/**
+	 * Savoir si un personne du même login est present dans la base
+	 * @param login
+	 * @return
+	 */
+	public boolean alreadyLogin(String login){
+		for (Personne p : listePersonne) {
+			if(p.getPseudo().equals(login))
+				return false;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * Retourner la personne ayant les identifiants login et mdp
+	 * @param login
+	 * @param mdp
+	 * @return
+	 * @throws RemoteException
+	 */
+	public Personne getPersonne(String login, String mdp) throws RemoteException{
+		for (Personne p : listePersonne) {
+			if(p.connect(login, mdp)){
+				return p;
+			}
+		}
+		
+		return null;
+	}
+
+	@Override
+	public void logOff(ClientTweet p) throws RemoteException {
+		p.getPersonne().disconect();
+	}
+	
 	public static void main1(String[] args) {
 		ServeurTweet s;
 		try {
@@ -261,17 +313,17 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 	}
 	
 	public static void main(String[] args) {
-		RMITweetInterfaceDeConnexion rm;
+		InterfacePublic rm;
 		try {
 			Registry reg=LocateRegistry.createRegistry(PORT);
-
+			
 			/*
 			 // Assign security manager
 		    if (System.getSecurityManager() == null)
 		    {
 		        System.setSecurityManager   (new RMISecurityManager());
 		    }
-		    */
+			 */
 			
 			rm = new ServeurTweet();
 			
@@ -289,44 +341,5 @@ public class ServeurTweet extends UnicastRemoteObject implements RMITweetInterfa
 		}finally{
 			//rm.close();
 		}
-	}
-
-	@Override
-	public void inscription(ClientTweet p) throws RemoteException {
-		if(!alreadyLogin(p.getPersonne().getPseudo()))
-			listePersonne.add(p);
-		else
-			throw new RemoteException();
-	}
-	
-	public boolean alreadyLogin(String login){
-		for (ClientTweet p : listePersonne) {
-			if(p.getPersonne().getPseudo().equals(login))
-				return false;
-		}
-		
-		return true;
-	}
-
-	@Override
-	public ClientTweet getPersonne(String login, String mdp) throws RemoteException{
-		for (ClientTweet p : listePersonne) {
-			if(p.getPersonne().connect(login, mdp)){
-				return p;
-			}
-		}
-		
-		return null;
-	}
-
-	@Override
-	public void logOff(ClientTweet p) throws RemoteException {
-		p.getPersonne().disconect();
-	}
-
-	@Override
-	public void relayerTweet(Tweet t, ClientTweet p) throws RemoteException {
-		// TODO Auto-generated method stub
-		
 	}
 }

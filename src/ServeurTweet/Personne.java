@@ -89,4 +89,9 @@ public class Personne implements Serializable{
 	public void disconnect(){
 		IsConnect = false;
 	}
+	
+	public void setLoginMDP(String login, String mdp){
+		this.pseudo = login;
+		this.mdp = mdp;
+	}
 }
