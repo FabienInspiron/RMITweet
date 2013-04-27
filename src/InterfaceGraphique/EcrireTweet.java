@@ -52,6 +52,7 @@ public class EcrireTweet extends JFrame{
 				Tweet t = new Tweet(topicField.getText(), textArea.getText());
 				try {
 					client.twitter(t);
+					dispose();
 				} catch (RemoteException e) {
 					System.out.println("Impossible d'envoyer le tweet");
 				}

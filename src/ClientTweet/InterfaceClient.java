@@ -14,6 +14,11 @@ public interface InterfaceClient extends Remote{
 	 */
 	public void afficherTweetRecu(Tweet t) throws RemoteException;
 	
+	/**
+	 * Retourner la personne responsable de ce tweet
+	 * @return
+	 * @throws RemoteException
+	 */
 	public Personne getPersonne() throws RemoteException;
 	
 }

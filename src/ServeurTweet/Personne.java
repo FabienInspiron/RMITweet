@@ -101,4 +101,8 @@ public class Personne implements Serializable{
 		this.pseudo = login;
 		this.mdp = mdp;
 	}
+	
+	public boolean is_equals(Personne p){
+		return (p.pseudo.equals(pseudo) && p.mdp.equals(mdp));
+	}
 }

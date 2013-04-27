@@ -35,6 +35,7 @@ public class Connexion extends JFrame {
 		getContentPane().setLayout(new BorderLayout());
 		connexion.addActionListener(alc);
 		inscription.addActionListener(alc);
+		loginField.setPreferredSize(new Dimension(2, 2));
 		JPanel jp = new JPanel();
 		jp.setLayout(new GridLayout(3, 2));
 		jp.add(login);
@@ -64,6 +65,7 @@ public class Connexion extends JFrame {
 				try {
 					client.Connexion(loginField.getText(), mdpField.getText());
 					new Compte(client);
+					dispose();
 				} catch (ConnexionException e) {
 					// TODO Auto-generated catch block
 					System.out.println("Connexion impossible");

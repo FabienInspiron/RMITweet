@@ -14,6 +14,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import ClientTweet.ClientTweet;
 import ClientTweet.InterfaceClient;
@@ -53,19 +54,29 @@ public class ServeurTweet extends UnicastRemoteObject implements InterfacePublic
 	}
 
 	/**
-	 * Ajouter un tweet a la liste
+	 * Ajouter un tweet a la liste en verifiant 
+	 * que le client à la possibilité de le faire
+	 * 
 	 * @param t
 	 */
 	public void Tweeter(Tweet t, InterfaceClient c){
-		listeTweet.add(t);
+		/**
+		 * Verifire que le tweet à été envoyé par la bonne personne
+		 */
 		try {
+			if(!exist(c.getPersonne())) {
+				System.out.println("Impossible de twitter " + c.getPersonne());
+				return;
+			}
+			
+			listeTweet.add(t);
 			System.out.println(c.getPersonne().getPrenonNom() + " a ajouté un nouveau tweet");
 			c.afficherTweetRecu(t);
+			//sendToFollowers(c.getPersonne(), t);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//sendToFollowers(c.getPersonne(), t);
 	}
 	
 	/**
@@ -135,7 +146,7 @@ public class ServeurTweet extends UnicastRemoteObject implements InterfacePublic
 		for (Personne p : listePersonne) {
 			if(p.connect(login, mdp)){
 				p.connect();
-				InterfacePrivee rmico = new ServeurTweet();
+				InterfacePrivee rmico = this;
 				return rmico;
 			}
 		}
@@ -266,8 +277,18 @@ public class ServeurTweet extends UnicastRemoteObject implements InterfacePublic
 			if(p.getPseudo().equals(login))
 				return false;
 		}
-		
 		return true;
+	}
+	
+	public boolean exist(Personne pers){
+		for (Personne p : listePersonne) {
+			System.out.println("-----------");
+			if(p.is_equals(pers)){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	/**

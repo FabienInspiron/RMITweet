@@ -87,6 +87,7 @@ public class Inscription extends JFrame{
 				try {
 					client.incription(p);
 					new Connexion(client);
+					dispose();
 				} catch (RemoteException e) {
 					System.out.println("Inscription impossible");
 				}
