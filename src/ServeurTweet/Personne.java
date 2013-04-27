@@ -19,6 +19,13 @@ public class Personne implements Serializable{
 	private boolean IsConnect;
 	private InetAddress Ip;
 
+	public Personne(){
+		this.pseudo = "";
+		this.nom = "";
+		this.prenom = "";
+		this.mdp = "";
+	}
+	
 	/**
 	 * Constructeur normal de personne
 	 * @param nom

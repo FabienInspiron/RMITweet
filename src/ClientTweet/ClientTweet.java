@@ -52,6 +52,10 @@ public class ClientTweet extends UnicastRemoteObject implements Serializable, In
 	 */
 	public void Connexion(String login, String mdp) throws ConnexionException{
 		try {
+			// Ajout du login et du mot de passe pour se souvenir du client
+			pers = new Personne();
+			pers.setLoginMDP(login, mdp);
+			
 			interfPrivee = interPublic.connexion(login, mdp);
 		} catch (RemoteException e) {
 			System.out.println("Impossible de se connecter");
@@ -71,6 +75,9 @@ public class ClientTweet extends UnicastRemoteObject implements Serializable, In
 		ClientTweet cl1 = null;
 		try {
 			cl1 = new ClientTweet();
+			new InterfaceGraphique.Connexion(cl1);
+			
+			/*
 			Personne p = new Personne("f4bien", "fabien", "tutu", "1234");
 			cl1.interPublic.inscription(p);
 			
@@ -78,12 +85,10 @@ public class ClientTweet extends UnicastRemoteObject implements Serializable, In
 			
 			Tweet t1 = new Tweet("#Rien", " de nouveau", cl1.pers);
 			cl1.interfPrivee.Tweeter(t1, cl1);
-			
+			*/
 		} catch (RemoteException e) {
 			e.printStackTrace();
-		} catch (ConnexionException e1) {
-			System.out.println("Login ou mot de passe incorrect");
-		}
+		} 
 	}
 	
 	public void setPersonne(Personne p){
@@ -98,6 +103,14 @@ public class ClientTweet extends UnicastRemoteObject implements Serializable, In
 	public void afficherTweetRecu(Tweet t) throws RemoteException{
 		System.out.println("Vous avez reçu un tweet : ");
 		System.out.println(t);
+	}
+	
+	public void incription(Personne p) throws RemoteException{
+		interPublic.inscription(p);
+	}
+	
+	public void twitter(Tweet t) throws RemoteException {
+		interfPrivee.Tweeter(t, this);
 	}
 }
 

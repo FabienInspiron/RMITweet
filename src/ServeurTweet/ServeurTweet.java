@@ -59,7 +59,7 @@ public class ServeurTweet extends UnicastRemoteObject implements InterfacePublic
 	public void Tweeter(Tweet t, InterfaceClient c){
 		listeTweet.add(t);
 		try {
-			//System.out.println(c.getPersonne().getPrenonNom() + " a ajouté un nouveau tweet");
+			System.out.println(c.getPersonne().getPrenonNom() + " a ajouté un nouveau tweet");
 			c.afficherTweetRecu(t);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -135,7 +135,6 @@ public class ServeurTweet extends UnicastRemoteObject implements InterfacePublic
 		for (Personne p : listePersonne) {
 			if(p.connect(login, mdp)){
 				p.connect();
-				//cl.setPersonne(p);
 				InterfacePrivee rmico = new ServeurTweet();
 				return rmico;
 			}

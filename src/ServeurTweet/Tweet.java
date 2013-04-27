@@ -25,8 +25,18 @@ public class Tweet implements Serializable{
 		this.personne = personne;
 	}
 	
+	public Tweet(String topic, String message) {
+		this.topic = topic;
+		this.message = message;
+		this.personne = null;
+	}
+	
 	@Override
 	public String toString() {
 		return "Tweet : \n#" + topic + "\nMessage : " + message + "\nPersonne : " + personne;
+	}
+	
+	public void setPersonne(Personne p){
+		this.personne = p;
 	}
 }
