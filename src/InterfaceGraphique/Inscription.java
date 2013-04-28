@@ -13,14 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import ServeurTweet.Personne;
+import ServeurTwitt.Personne;
 
-import ClientTweet.ClientTweet;
+import ClientTwitt.ClientTwitt;
 
 
 public class Inscription extends JFrame{
 	
-	public ClientTweet client;
+	public ClientTwitt client;
 	private JTextField loginField = new JTextField();
 	private JPasswordField mdp1Field = new JPasswordField();
 	private JPasswordField mdp2Field = new JPasswordField();
@@ -35,7 +35,7 @@ public class Inscription extends JFrame{
 	private JButton annuler = new JButton("Annuler");
 	private ActionListenerInscription alc = new ActionListenerInscription();
 	
-	public Inscription(ClientTweet cl){
+	public Inscription(ClientTwitt cl){
 		super("Inscription");
 		this.setSize(500, 500);
 		getContentPane().setLayout(new BorderLayout());

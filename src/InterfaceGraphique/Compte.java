@@ -10,12 +10,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import ClientTweet.ClientTweet;
-
+import ClientTwitt.ClientTwitt;
 
 public class Compte extends JFrame{
 
-	ClientTweet client;
+	ClientTwitt client;
 	
 	private JButton ecrire = new JButton("Ecrire un tweet");
 	private JButton topic = new JButton("Voir un topic");
@@ -28,9 +27,9 @@ public class Compte extends JFrame{
 	private JTextField utilisateurField = new JTextField();
 	private JTextField abonnementField = new JTextField();
 	private ActionListenerCompte alc = new ActionListenerCompte();
-	private ClientTweet ct;
+	private ClientTwitt ct;
 	
-	public Compte(ClientTweet cl){
+	public Compte(ClientTwitt cl){
 		
 		/*super(ct.getPersonne().getPseudo());*/
 		
@@ -81,13 +80,12 @@ public class Compte extends JFrame{
 			}
 			if(actu.equals(obj)){
 				//Méthode qui récupère une liste de tweet( = tweet des personnes que le ClientTweet follow)
-				//new ListeTweets(ct.getPersonne().getPseudo()(), li);
+				new Actualite(client);
 			}	
 			if(abonnement.equals(obj)){
 				//S'abonner à un compte d'un ClientTweet 
 				//Méthode qui prend en paramètre un pseudo 				
-				//ct.abonner(utilisateurField.getText());
-				
+				new Follow(client);				
 			}
 			if(followers.equals(obj)){
 				//Afficher tous les followers de ClientTweet 

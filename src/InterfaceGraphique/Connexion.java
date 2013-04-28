@@ -13,13 +13,13 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import ServeurTweet.ConnexionException;
+import ServeurTwitt.ConnexionException;
 
-import ClientTweet.ClientTweet;
+import ClientTwitt.ClientTwitt;
 
 public class Connexion extends JFrame {
 	
-	public ClientTweet client;
+	public ClientTwitt client;
 	
 	private JTextField loginField = new JTextField();
 	private JPasswordField mdpField = new JPasswordField();
@@ -29,7 +29,7 @@ public class Connexion extends JFrame {
 	private JButton inscription = new JButton("Inscription");
 	private ActionListenerConnexion alc = new ActionListenerConnexion();
 	
-	public Connexion(ClientTweet cl){
+	public Connexion(ClientTwitt cl){
 		super("Connexion");
 		this.setSize(500, 500);
 		getContentPane().setLayout(new BorderLayout());

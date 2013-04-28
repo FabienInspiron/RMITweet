@@ -3,8 +3,8 @@ package InterfaceGraphique;
 import java.util.ArrayList;
 import java.util.List;
 
-import ServeurTweet.Personne;
-import ServeurTweet.Tweet;
+import ServeurTwitt.Personne;
+import ServeurTwitt.Twitt;
 
 public class Twitter {
 	public static void main(String[] args) {

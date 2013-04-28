@@ -9,11 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import ServeurTweet.Tweet;
+import ServeurTwitt.Twitt;
 
 public class ListeTweets extends JFrame{
 	
-	public ListeTweets(String titreFenetre, ArrayList<Tweet> li){
+	public ListeTweets(String titreFenetre, ArrayList<Twitt> li){
 		super(titreFenetre);
 		
 		this.setSize(500, 500);
