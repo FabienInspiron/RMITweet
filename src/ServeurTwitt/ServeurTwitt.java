@@ -109,8 +109,8 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 * @param p
 	 */
 	public void sendToFollowers(String login, Twitt t){
-		ArrayList<InterfaceClient> array = listeFollower.get(login);
-		System.out.println(array.size());
+		ArrayList<InterfaceClient> array = new ArrayList<InterfaceClient>();
+		listeFollower.get(login);
 		
 		for (InterfaceClient personne : array) {
 			send(personne, t);
