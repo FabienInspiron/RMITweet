@@ -96,17 +96,21 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 * @param personneToFollow est la personne a suivre
 	 */
 	public void addFollower(String login, InterfaceClient cl) throws RemoteException{
-		if(alreadyLogin(login)){
-			ArrayList<InterfaceClient> arr = listeFollower.get(login);
-			arr.add(cl);
-		}else{
-			ArrayList<InterfaceClient> arr = new ArrayList<InterfaceClient>();
-			arr.add(cl);
-			listeFollower.put(login, arr);
-		}
+		if(!alreadyLogin(login))
+			if(listeFollower.get(login) != null){
+				ArrayList<InterfaceClient> arr = listeFollower.get(login);
+				arr.add(cl);
+				System.out.println("Creation");
+			}else{
+				ArrayList<InterfaceClient> arr = new ArrayList<InterfaceClient>();
+				arr.add(cl);
+				listeFollower.put(login, arr);
+				System.out.println("ajout");
+			}
+		else
+			System.out.println("Cette personne n'existe pas");
 		
 		System.out.println(cl.getPersonne().getPseudo() + " veut suivre " + login);
-		System.out.println(listeFollower.size());
 	}
 	
 	/**
@@ -115,8 +119,8 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 */
 	public void sendToFollowers(String login, Twitt t){
 		ArrayList<InterfaceClient> array = new ArrayList<InterfaceClient>();
-		listeFollower.get(login);
-		System.out.println("Envoi aux followers : ");
+		array = listeFollower.get(login);
+		
 		for (InterfaceClient personne : array) {
 			send(personne, t);
 		}
@@ -133,7 +137,6 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		try {
 			client.afficherTweetRecu(t);
 			System.out.print(client.getPersonne().getPseudo());
-			
 		} catch (RemoteException e) {
 			System.out.println("Impossible d'envoyer aux followers");
 			e.printStackTrace();
@@ -292,12 +295,12 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			if(p.getPseudo().equals(login))
 				return false;
 		}
+		
 		return true;
 	}
 	
 	public boolean exist(Personne pers){
 		for (Personne p : listePersonne) {
-			System.out.println("-----------");
 			if(p.is_equals(pers)){
 				return true;
 			}
