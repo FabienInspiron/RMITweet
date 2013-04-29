@@ -124,5 +124,18 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 	public ArrayList<Twitt> getListReception(){
 		return listeRecu;
 	}
+	
+	public ArrayList<Twitt> getTweetTopic(String topic) throws RemoteException{
+		return interPublic.getTweetTopic(topic);
+	}
+	
+	public ArrayList<Twitt> getTweetUtilisateur(String utilisateur) throws RemoteException{
+		return interPublic.getTweetUtilisateur(utilisateur);
+	}
+	
+	public ArrayList<Personne> getFollowers(ClientTwitt ct) throws RemoteException{
+		return interPublic.getFollowers(ct);
+	}
+
 }
 

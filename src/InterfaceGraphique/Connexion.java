@@ -3,8 +3,10 @@ package InterfaceGraphique;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -64,7 +66,15 @@ public class Connexion extends JFrame {
 				//new Compte(clientTweet);
 				try {
 					client.Connexion(loginField.getText(), mdpField.getText());
-					new Compte(client);
+					try {
+						new Compte(client);
+					} catch (HeadlessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					dispose();
 				} catch (ConnexionException e) {
 					// TODO Auto-generated catch block

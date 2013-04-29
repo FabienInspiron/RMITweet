@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 
 import ServeurTwitt.Twitt;
 
-public class ListeTweets extends JFrame{
+public class AfficheListe extends JFrame{
 	
-	public ListeTweets(String titreFenetre, ArrayList<Twitt> li){
+	public AfficheListe(String titreFenetre, ArrayList li){
 		super(titreFenetre);
 		
 		this.setSize(500, 500);

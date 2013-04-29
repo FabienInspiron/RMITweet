@@ -183,21 +183,6 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		listeTweet.add(t);
 	}
 	
-	/**
-	 * Retourner tous les tweets ayant le sujet topic
-	 * @param topic
-	 * @return
-	 */
-	public ArrayList<Twitt> getTweetTopic(String topic){
-		ArrayList<Twitt> retour = new ArrayList<Twitt>();
-		for (Twitt t : listeTweet) {
-			if(t.topic.equals(topic))
-				retour.add(t);
-		}
-		
-		return retour;
-	}
-	
 	@Override
 	public void follower(String login, InterfaceClient cl) throws RemoteException {
 		addFollower(login, cl);
@@ -277,6 +262,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		System.out.println("\n");
 	}
 	
+
 
 	/**
 	 * Inscription de la personne a la base de donnée des personnes
@@ -372,4 +358,39 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public ArrayList<Twitt> getTweetTopic(String topic) {
+		ArrayList<Twitt> retour = new ArrayList<Twitt>();
+		for (Twitt t : listeTweet) {
+			if(t.topic.equals(topic))
+				retour.add(t);
+		}
+		
+		return retour;
+	}
+
+	@Override
+	public ArrayList<Twitt> getTweetUtilisateur(String utilisateur) {
+		ArrayList<Twitt> retour = new ArrayList<Twitt>();
+		for (Twitt t : listeTweet) {
+			if(t.personne.getPseudo().equals(utilisateur))
+				retour.add(t);
+		}
+		
+		return retour;		
+	}
+
+	@Override
+	public ArrayList<Personne> getFollowers(ClientTwitt ct) throws RemoteException {
+		ArrayList<Personne> a = new ArrayList<Personne>();
+		for (InterfaceClient personne : listeFollower.get(ct.getPersonne().getPseudo())) {
+			a.add(personne.getPersonne());
+		}
+		System.out.println("taille" + a.size());
+		return a;
+	}
+	
+	
+
 }

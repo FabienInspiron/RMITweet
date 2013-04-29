@@ -33,7 +33,7 @@ public class Twitt implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Tweet : \n#" + topic + "\nMessage : " + message + "\nPersonne : " + personne.getPseudo();
+		return "Tweet : \t#" + topic + "\tMessage : " + message + "\tPersonne : " + personne.getPseudo();
 	}
 	
 	public void setPersonne(Personne p){

@@ -2,8 +2,10 @@ package InterfaceGraphique;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,13 +29,13 @@ public class Compte extends JFrame{
 	private JTextField utilisateurField = new JTextField();
 	private JTextField abonnementField = new JTextField();
 	private ActionListenerCompte alc = new ActionListenerCompte();
-	private ClientTwitt ct;
+
 	
-	public Compte(ClientTwitt cl){
+	public Compte(ClientTwitt ct) throws HeadlessException, RemoteException{
 		
-		/*super(ct.getPersonne().getPseudo());*/
+		super(ct.getPersonne().getPseudo());
 		
-		this.client = cl;
+		this.client = ct;
 		
 		this.setSize(500, 500);
 		getContentPane().setLayout(new BorderLayout());
@@ -70,13 +72,22 @@ public class Compte extends JFrame{
 			}
 			if(topic.equals(obj)){
 				//Méthode qui prend en param un topic et retourne une liste de tweet à afficher
-				topicField.getText();
-				//new ListeTweets(topicField.getText(), li);				
+				try {
+					new AfficheListe(topicField.getText(), client.getTweetTopic(topicField.getText()));
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
 			}
 			if(utilisateur.equals(obj)){
 				//Méthode qui prend en param un login et retourne une liste de tweet à afficher
-				utilisateurField.getText();
-				//new ListeTweets(utilisateurField.getText(), li);	
+				
+				try {
+					new AfficheListe("Tweets de a" + utilisateurField.getText(), client.getTweetUtilisateur(utilisateurField.getText()));
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
 			}
 			if(actu.equals(obj)){
 				//Méthode qui récupère une liste de tweet( = tweet des personnes que le ClientTweet follow)
@@ -85,12 +96,24 @@ public class Compte extends JFrame{
 			if(abonnement.equals(obj)){
 				//S'abonner à un compte d'un ClientTweet 
 				//Méthode qui prend en paramètre un pseudo 				
-				new Follow(client);				
+				try {
+					client.follower(abonnementField.getText());
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
 			}
 			if(followers.equals(obj)){
 				//Afficher tous les followers de ClientTweet 
 				//Méthode qui récupère une liste de ClientTWeet et affiche leur pseudo
 				//ct.getFollowers();
+				
+				try {
+					new AfficheListe("Followers de " + client.getPersonne().getPseudo(), client.getFollowers(client));
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}	
 		}
 	}
