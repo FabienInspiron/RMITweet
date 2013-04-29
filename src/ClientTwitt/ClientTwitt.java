@@ -13,10 +13,12 @@ import ServeurTwitt.ConnexionException;
 import ServeurTwitt.InterfacePrivee;
 import ServeurTwitt.InterfacePublic;
 import ServeurTwitt.Personne;
+import ServeurTwitt.RMISSLClientSocketFactory;
+import ServeurTwitt.RMISSLServerSocketFactory;
 import ServeurTwitt.Twitt;
 
 public class ClientTwitt extends UnicastRemoteObject implements Serializable, InterfaceClient{
-	public static final int PORT = 2000;
+	public static final int PORT = 2001;
 	
 	/**
 	 * Le client est une personnne
@@ -35,6 +37,11 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 	public ClientTwitt() throws RemoteException{
 		super();
 		try {
+			
+			if (System.getSecurityManager() == null) { 
+				System.setSecurityManager(new java.rmi.RMISecurityManager()); 
+			}
+			
 			interPublic = (InterfacePublic) Naming.lookup("rmi://localhost:"+PORT+"/MonOD");		
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -83,16 +90,7 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 		try {
 			cl1 = new ClientTwitt();
 			new InterfaceGraphique.Connexion(cl1);
-			
-			/*
-			Personne p = new Personne("f4bien", "fabien", "tutu", "1234");
-			cl1.interPublic.inscription(p);
-			
-			cl1.Connexion("f4bien", "1234");
-			
-			Tweet t1 = new Tweet("#Rien", " de nouveau", cl1.pers);
-			cl1.interfPrivee.Tweeter(t1, cl1);
-			*/
+
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} 

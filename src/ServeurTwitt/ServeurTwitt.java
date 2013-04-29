@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -23,7 +24,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final int PORT = 2000;
+	public static final int PORT = 2001;
 	
 	private ArrayList<Twitt> listeTweet;
 	private ArrayList<Personne> listePersonne;
@@ -45,7 +46,9 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 * Constructeur normal
 	 * @throws RemoteException
 	 */
-	protected ServeurTwitt() throws RemoteException {
+	protected ServeurTwitt(RMISSLClientSocketFactory cl, RMISSLServerSocketFactory sr) throws RemoteException {
+		super(0,cl,sr);
+		
 		listeTweet = new ArrayList<Twitt>();
 		listePersonne = new ArrayList<Personne>();
 		listeFollower = new HashMap<String, ArrayList<InterfaceClient>>();
@@ -331,39 +334,22 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		p.getPersonne().disconect();
 	}
 	
-	public static void main1(String[] args) {
-		ServeurTwitt s;
-		try {
-			s = new ServeurTwitt();
-			
-			Personne p1 = new Personne("f4bien", "fabien", "tutu", "1234");
-			Twitt t1 = new Twitt("topic","message", p1);
-			
-			//s.addPersonne(p1);
-			//s.Tweeter(t1, p1);
-			
-			s.close();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
 	public static void main(String[] args) {
 		InterfacePublic rm;
 		try {
 			Registry reg=LocateRegistry.createRegistry(PORT);
 			
-			/*
 			 // Assign security manager
 		    if (System.getSecurityManager() == null)
 		    {
 		        System.setSecurityManager   (new RMISecurityManager());
 		    }
-			 */
 			
-			rm = new ServeurTwitt();
+			RMISSLClientSocketFactory clientSocket = new RMISSLClientSocketFactory();
+			RMISSLServerSocketFactory serveurSocket = new RMISSLServerSocketFactory();
+			
+			rm = new ServeurTwitt(clientSocket, serveurSocket);
+			
 			
 			try {
 				Naming.rebind("rmi://localhost:"+PORT+"/MonOD", rm);

@@ -1,0 +1,7 @@
+Client :
+-Djavax.net.ssl.trustStore=test.ks
+-Djava.security.policy="policy.cfg"
+
+Serveur :
+-Djavax.net.ssl.keyStore=test.ks -Djavax.net.ssl.keyStorePassword=azerty
+-Djava.security.policy="policy.cfg"
