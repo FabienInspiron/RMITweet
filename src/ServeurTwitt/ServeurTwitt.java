@@ -70,10 +70,12 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 				return;
 			}
 			
+			System.out.println(c.getPersonne().getPseudo() + " a ajouté un nouveau tweet");
+
 			listeTweet.add(t);
-			System.out.println(c.getPersonne().getPrenonNom() + " a ajouté un nouveau tweet");
 			
 			sendToFollowers(c.getPersonne().getPseudo(), t);
+			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,6 +104,9 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			arr.add(cl);
 			listeFollower.put(login, arr);
 		}
+		
+		System.out.println(cl.getPersonne().getPseudo() + " veut suivre " + login);
+		System.out.println(listeFollower.size());
 	}
 	
 	/**
@@ -111,7 +116,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	public void sendToFollowers(String login, Twitt t){
 		ArrayList<InterfaceClient> array = new ArrayList<InterfaceClient>();
 		listeFollower.get(login);
-		
+		System.out.println("Envoi aux followers : ");
 		for (InterfaceClient personne : array) {
 			send(personne, t);
 		}
@@ -127,6 +132,8 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	public void send(InterfaceClient client, Twitt t){
 		try {
 			client.afficherTweetRecu(t);
+			System.out.print(client.getPersonne().getPseudo());
+			
 		} catch (RemoteException e) {
 			System.out.println("Impossible d'envoyer aux followers");
 			e.printStackTrace();
