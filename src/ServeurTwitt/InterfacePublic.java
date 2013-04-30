@@ -47,7 +47,7 @@ public interface InterfacePublic extends Remote{
 	 * @return
 	 * @throws RemoteException
 	 */
-	public ArrayList<Personne> getFollowers(ClientTwitt ct) throws RemoteException;
+	public ArrayList<Personne> getFollowers(InterfaceClient ct) throws RemoteException;
 	
 	
 }

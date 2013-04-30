@@ -104,10 +104,7 @@ public class Compte extends JFrame{
 				}			
 			}
 			if(followers.equals(obj)){
-				//Afficher tous les followers de ClientTweet 
-				//Méthode qui récupère une liste de ClientTWeet et affiche leur pseudo
-				//ct.getFollowers();
-				
+				//Afficher tous les followers de ClientTweet 				
 				try {
 					new AfficheListe("Followers de " + client.getPersonne().getPseudo(), client.getFollowers(client));
 				} catch (RemoteException e) {

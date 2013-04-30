@@ -382,7 +382,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	}
 
 	@Override
-	public ArrayList<Personne> getFollowers(ClientTwitt ct) throws RemoteException {
+	public ArrayList<Personne> getFollowers(InterfaceClient ct) throws RemoteException {
 		ArrayList<Personne> a = new ArrayList<Personne>();
 		for (InterfaceClient personne : listeFollower.get(ct.getPersonne().getPseudo())) {
 			a.add(personne.getPersonne());
