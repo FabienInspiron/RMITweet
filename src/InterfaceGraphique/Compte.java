@@ -24,6 +24,7 @@ public class Compte extends JFrame{
 	private JButton actu = new JButton("Voir mon fil d'actualité");
 	private JButton abonnement = new JButton("M'abonner");
 	private JButton followers = new JButton("Afficher mes followers");
+	private JButton quitter = new JButton("Quitter");
 	
 	private JTextField topicField = new JTextField();
 	private JTextField utilisateurField = new JTextField();
@@ -45,6 +46,7 @@ public class Compte extends JFrame{
 		actu.addActionListener(alc);
 		abonnement.addActionListener(alc);
 		followers.addActionListener(alc);
+		quitter.addActionListener(alc);
 		JPanel jp = new JPanel();
 		jp.setLayout(new GridLayout(5, 2));
 		jp.add(ecrire);
@@ -56,6 +58,7 @@ public class Compte extends JFrame{
 		jp.add(abonnement);
 		jp.add(abonnementField);
 		jp.add(followers);
+		jp.add(quitter);
 		this.add(jp);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
@@ -97,7 +100,8 @@ public class Compte extends JFrame{
 				//S'abonner à un compte d'un ClientTweet 
 				//Méthode qui prend en paramètre un pseudo 				
 				try {
-					client.follower(abonnementField.getText());
+					if(abonnementField.getText() != null)
+						client.follower(abonnementField.getText());
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -112,6 +116,9 @@ public class Compte extends JFrame{
 					e.printStackTrace();
 				}
 			}	
+			if(quitter.equals(obj)){
+				dispose();
+			}
 		}
 	}
 }

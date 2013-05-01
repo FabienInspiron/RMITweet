@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
@@ -336,10 +337,16 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			
 			rm = new ServeurTwitt(clientSocket, serveurSocket);
 			
-			
 			try {
 				Naming.rebind("rmi://localhost:"+PORT+"/MonOD", rm);
 				System.out.println("Serveur lancé sur le port " + PORT);
+				
+				System.out.println("Appuyer sur Entrée pour eteindre le serveur");
+				Scanner sc = new Scanner(System.in);
+				sc.next();
+				ServeurTwitt s = (ServeurTwitt)rm;
+				s.close();
+				System.out.println("Serveur éteint");
 				
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -384,13 +391,12 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	@Override
 	public ArrayList<Personne> getFollowers(InterfaceClient ct) throws RemoteException {
 		ArrayList<Personne> a = new ArrayList<Personne>();
-		for (InterfaceClient personne : listeFollower.get(ct.getPersonne().getPseudo())) {
-			a.add(personne.getPersonne());
-		}
+		ArrayList<InterfaceClient> ins = listeFollower.get(ct.getPersonne().getPseudo());
+		if(ins != null)
+			for (InterfaceClient personne : ins) {
+				a.add(personne.getPersonne());
+			}
 		System.out.println("taille" + a.size());
 		return a;
 	}
-	
-	
-
 }
