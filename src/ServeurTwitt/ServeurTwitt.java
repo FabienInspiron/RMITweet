@@ -341,7 +341,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 				Naming.rebind("rmi://localhost:"+PORT+"/MonOD", rm);
 				System.out.println("Serveur lancé sur le port " + PORT);
 				
-				System.out.println("Appuyer sur Entrée pour eteindre le serveur");
+				System.out.println("Pour eteindre le serveur touche c: ");
 				Scanner sc = new Scanner(System.in);
 				sc.next();
 				ServeurTwitt s = (ServeurTwitt)rm;

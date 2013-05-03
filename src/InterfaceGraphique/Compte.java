@@ -74,6 +74,9 @@ public class Compte extends JFrame{
 				new EcrireTweet(client);
 			}
 			if(topic.equals(obj)){
+				if(topicField.getText().equals(""))
+					return;
+				
 				//Méthode qui prend en param un topic et retourne une liste de tweet à afficher
 				try {
 					new AfficheListe(topicField.getText(), client.getTweetTopic(topicField.getText()));
@@ -84,6 +87,8 @@ public class Compte extends JFrame{
 			}
 			if(utilisateur.equals(obj)){
 				//Méthode qui prend en param un login et retourne une liste de tweet à afficher
+				if(utilisateurField.getText().equals(""))
+					return;
 				
 				try {
 					new AfficheListe("Tweets de a" + utilisateurField.getText(), client.getTweetUtilisateur(utilisateurField.getText()));
@@ -97,6 +102,9 @@ public class Compte extends JFrame{
 				new Actualite(client);
 			}	
 			if(abonnement.equals(obj)){
+				if(abonnementField.getText().equals(""))
+					return;
+				
 				//S'abonner à un compte d'un ClientTweet 
 				//Méthode qui prend en paramètre un pseudo 				
 				try {
@@ -108,7 +116,8 @@ public class Compte extends JFrame{
 				}			
 			}
 			if(followers.equals(obj)){
-				//Afficher tous les followers de ClientTweet 				
+				//Afficher tous les followers de ClientTweet 	
+			
 				try {
 					new AfficheListe("Followers de " + client.getPersonne().getPseudo(), client.getFollowers(client));
 				} catch (RemoteException e) {

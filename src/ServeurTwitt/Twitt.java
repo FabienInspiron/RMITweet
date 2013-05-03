@@ -1,6 +1,9 @@
 package ServeurTwitt;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Definition de la classe tweet
@@ -12,6 +15,7 @@ public class Twitt implements Serializable{
 	String topic;
 	String message;
 	Personne personne;
+	Date date;
 	
 	/**
 	 * Constructeur normal pour un tweet
@@ -23,6 +27,7 @@ public class Twitt implements Serializable{
 		this.topic = topic;
 		this.message = message;
 		this.personne = personne;
+		date = new Date();
 	}
 	
 	public Twitt(String topic, String message) {
@@ -33,7 +38,13 @@ public class Twitt implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Tweet : \t#" + topic + "\tMessage : " + message + "\tPersonne : " + personne.getPseudo();
+		String retour = "Tweet : \t#" + topic + "\tMessage : ";
+		retour += message + "\tPersonne : " + personne.getPseudo();
+		
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String dateString = dateFormat.format(date);
+		retour += "\n Date : " + dateString;
+		return retour;
 	}
 	
 	public void setPersonne(Personne p){
