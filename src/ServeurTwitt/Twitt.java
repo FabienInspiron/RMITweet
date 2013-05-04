@@ -36,6 +36,10 @@ public class Twitt implements Serializable{
 		this.personne = null;
 	}
 	
+	public String getTopic() {
+		return topic;
+	}
+
 	@Override
 	public String toString() {
 		String retour = "Tweet : \t#" + topic + "\tMessage : ";

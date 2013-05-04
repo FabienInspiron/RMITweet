@@ -34,20 +34,26 @@ public interface InterfacePublic extends Remote{
 	public ArrayList<Twitt> getTweetTopic(String topic) throws RemoteException;
 	
 	/**
-	 * Retourne les tweets d'un utilisateur
+	 * 
 	 * @param utilisateur
 	 * @throws RemoteException
-	 * @return
+	 * @return tweets d'un utilisateur
 	 */
 	public ArrayList<Twitt> getTweetUtilisateur(String utilisateur) throws RemoteException;
 	
+
 	/**
-	 * Retourne la liste des followers d'un client ct
-	 * @param ct
-	 * @return
+	 * 
+	 * @return la liste de tous les topics
 	 * @throws RemoteException
 	 */
-	public ArrayList<Personne> getFollowers(InterfaceClient ct) throws RemoteException;
+	public ArrayList<String> getListTopics() throws RemoteException;
 	
+	/**
+	 * 
+	 * @return la liste de tous les utilisateurs
+	 * @throws RemoteException
+	 */
+	public ArrayList<String> getListUtilisateurs() throws RemoteException;
 	
 }

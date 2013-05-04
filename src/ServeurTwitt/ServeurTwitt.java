@@ -16,6 +16,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import ClientTwitt.ClientTwitt;
@@ -29,6 +31,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	
 	private ArrayList<Twitt> listeTweet;
 	private ArrayList<Personne> listePersonne;
+	private HashSet<String> listeTopic;
 	
 	/**
 	 * Un personne peut suivre ce que fait un autre personne
@@ -53,7 +56,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		listeTweet = new ArrayList<Twitt>();
 		listePersonne = new ArrayList<Personne>();
 		listeFollower = new HashMap<String, ArrayList<InterfaceClient>>();
-		
+		listeTopic = new HashSet();
 		loadTweet();
 		loadPersonne();
 	}
@@ -77,6 +80,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			System.out.println(c.getPersonne().getPseudo() + " a ajouté un nouveau tweet");
 
 			listeTweet.add(t);
+			listeTopic.add(t.getTopic());
 			
 			sendToFollowers(c.getPersonne().getPseudo(), t);
 			
@@ -220,6 +224,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	private void loadTweet(){
 		try {
 			ObjectInputStream is = new ObjectInputStream(new FileInputStream(fichierTweet));
+			
 			listeTweet = (ArrayList<Twitt>) is.readObject();
 		} catch (IOException e) {
 			listeTweet = new ArrayList<Twitt>();
@@ -399,4 +404,25 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		System.out.println("taille" + a.size());
 		return a;
 	}
+
+	@Override
+	public ArrayList<String> getListTopics() throws RemoteException {
+		ArrayList<String> listTopics =  new ArrayList<String>();
+		Iterator i = listeTopic.iterator(); 
+		while(i.hasNext()) 
+		{
+			listTopics.add((String) i.next());
+		}
+		return listTopics;
+	}
+
+	@Override
+	public ArrayList<String> getListUtilisateurs() throws RemoteException {
+		ArrayList<String> listUtilisateurs =  new ArrayList<String>();
+		for(Personne p : listePersonne){
+			listUtilisateurs.add(p.getPseudo());
+		}
+		return listUtilisateurs;
+	}
+
 }

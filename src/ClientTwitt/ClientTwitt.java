@@ -89,7 +89,8 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 		ClientTwitt cl1 = null;
 		try {
 			cl1 = new ClientTwitt();
-			new InterfaceGraphique.Connexion(cl1);
+			//new InterfaceGraphique.Connexion(cl1);
+			new InterfaceGraphique.Twitter(cl1);
 
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -109,20 +110,14 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 		listeRecu.add(t);
 	}
 	
-	public void incription(Personne p) throws RemoteException{
-		interPublic.inscription(p);
-	}
-	
-	public void twitter(Twitt t) throws RemoteException {
-		interfPrivee.twitter(t, this);
-	}
-	
-	public void follower(String login) throws RemoteException{
-		interfPrivee.follower(login, this);
-	}
-	
 	public ArrayList<Twitt> getListReception(){
 		return listeRecu;
+	}
+	
+	//Utilisation de l'interface public
+	
+	public void incription(Personne p) throws RemoteException{
+		interPublic.inscription(p);
 	}
 	
 	public ArrayList<Twitt> getTweetTopic(String topic) throws RemoteException{
@@ -133,8 +128,26 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 		return interPublic.getTweetUtilisateur(utilisateur);
 	}
 	
+	public ArrayList<String> getListTopics() throws RemoteException{
+		return interPublic.getListTopics();
+	}
+	
+	public ArrayList<String> getListUtilisateurs() throws RemoteException{
+		return interPublic.getListUtilisateurs();
+	}
+	
+	//Utilisation de l'interface privee
+	
+	public void twitter(Twitt t) throws RemoteException {
+		interfPrivee.twitter(t, this);
+	}
+	
+	public void follower(String login) throws RemoteException{
+		interfPrivee.follower(login, this);
+	}
+		
 	public ArrayList<Personne> getFollowers(ClientTwitt ct) throws RemoteException{
-		return interPublic.getFollowers(ct);
+		return interfPrivee.getFollowers(ct);
 	}
 
 }

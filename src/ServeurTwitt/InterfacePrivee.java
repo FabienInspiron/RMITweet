@@ -2,6 +2,7 @@ package ServeurTwitt;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import ClientTwitt.ClientTwitt;
 import ClientTwitt.InterfaceClient;
@@ -33,6 +34,14 @@ public interface InterfacePrivee extends Remote{
 	 * @throws RemoteException
 	 */
 	public void follower(String login, InterfaceClient c) throws RemoteException;
+	
+	/**
+	 * Retourne la liste des followers d'un client ct
+	 * @param ct
+	 * @return
+	 * @throws RemoteException
+	 */
+	public ArrayList<Personne> getFollowers(InterfaceClient ct) throws RemoteException;
 	
 	/**
 	 * Permet à une personne de se deconnecter
