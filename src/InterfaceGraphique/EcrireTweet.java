@@ -16,6 +16,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import ServeurTwitt.Twitt;
+import ServeurTwitt.TwittImage;
 
 import ClientTwitt.ClientTwitt;
 
@@ -31,6 +32,7 @@ public class EcrireTweet extends JFrame{
 	private JFileChooser fc;
 	private JButton openButton = new JButton("Ajouter une image");
 	private JPanel jp;
+	private boolean asImage;
 	
 	public EcrireTweet(ClientTwitt cl){
 		super("Tweeter");
@@ -51,21 +53,25 @@ public class EcrireTweet extends JFrame{
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		client = cl;
+		asImage = false;
 	}
 	
 	private class ActionListenerTweet implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			Object obj = event.getSource();
 	
-			//Si on a cliqué sur le bouton twitter
+			//Si on a cliquï¿½ sur le bouton twitter
 			if(twitter.equals(obj)){
 				//Sauvegarder le tweet et l'envoyer aux followers (+ topic ??)
 				
 				try {
 					t = new Twitt(topicField.getText(), textArea.getText(), client.getPersonne());
-					if(ic != null){
-						t.setIc(ic);
+					
+					
+					if(asImage){
+						t = new TwittImage(topicField.getText(), textArea.getText(), client.getPersonne(), ic);
 					}
+					
 					client.twitter(t);
 					dispose();
 				} catch (RemoteException e) {
@@ -73,6 +79,7 @@ public class EcrireTweet extends JFrame{
 				}
 			}
 			if(openButton.equals(obj)){
+				asImage = true;
 				
 				//Ouvrir une fenetre qui permet d'aller choisir un fichier
 				int returnVal = fc.showOpenDialog(jp);
@@ -87,6 +94,7 @@ public class EcrireTweet extends JFrame{
 	                jp.repaint();
 	                setVisible(true);
 	                System.out.println(file.getAbsolutePath());*/
+	                
 	                System.out.println("Opening: " + file.getName() + ".\n");
 	            } else {
 	            	System.out.println("Open command cancelled by user.\n");

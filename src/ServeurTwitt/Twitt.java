@@ -18,7 +18,6 @@ public class Twitt implements Serializable{
 	String message;
 	Personne personne;
 	Date date;
-	ImageIcon ic;
 	
 	/**
 	 * Constructeur normal pour un tweet
@@ -31,14 +30,12 @@ public class Twitt implements Serializable{
 		this.message = message;
 		this.personne = personne;
 		date = new Date();
-		ic = null;
 	}
 	
 	public Twitt(String topic, String message) {
 		this.topic = topic;
 		this.message = message;
 		this.personne = null;
-		ic = null;
 	}
 	
 	public String getTopic() {
@@ -58,15 +55,5 @@ public class Twitt implements Serializable{
 	
 	public void setPersonne(Personne p){
 		this.personne = p;
-	}
-
-	public ImageIcon getIc() {
-		return ic;
-	}
-
-	public void setIc(ImageIcon ic) {
-		this.ic = ic;
-	}
-	
-	
+	}	
 }
