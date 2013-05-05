@@ -20,7 +20,7 @@ public class Twitter extends JFrame{
 	
 	private ClientTwitt client;
 	private JButton connexion = new JButton("Connexion/Inscription");
-	private JButton visite = new JButton("Visiter\nMode non authentifié");
+	private JButton visite = new JButton("Visiter (Mode non authentifié)");
 	private ActionListenerClient alc = new ActionListenerClient();
 	
 	public Twitter(ClientTwitt cl){
@@ -38,6 +38,7 @@ public class Twitter extends JFrame{
 		this.setVisible(true);
 		client = cl;
 	}
+	
 	private class ActionListenerClient implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			Object obj = event.getSource();
@@ -51,23 +52,5 @@ public class Twitter extends JFrame{
 				new Visite(client);
 			}	
 		}
-	}
-	public static void main(String[] args) {
-		//Connexion c = new Connexion();
-		//Inscription i = new Inscription();
-		//Compte c = new Compte();
-		//EcrireTweet ec = new EcrireTweet();
-		/*Personne p = new Personne("pseudo", "nom", "prenom", "mdp");
-		Tweet t = new Tweet("top", "mess", p);
-		Tweet t1 = new Tweet("top", "mess2", p);
-		Tweet t2 = new Tweet("top", "mess3", p);
-		ArrayList<Tweet> li =  new ArrayList<Tweet>();
-		li.add(t);
-		li.add(t1);
-		li.add(t2);
-		new ListeTweets("liste tweet", li);*/
-		//Image i = new Image();
-		
-		//new Twitter();
 	}
 }

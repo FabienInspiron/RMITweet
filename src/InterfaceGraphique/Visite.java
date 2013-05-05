@@ -63,7 +63,7 @@ public class Visite extends JFrame{
 				
 				//Méthode qui prend en param un topic et retourne une liste de tweet à afficher
 				try {
-					new AfficheListe(topicField.getText(), client.getTweetTopic(topicField.getText()));
+					new AfficheListe(topicField.getText(), client.getTweetTopic(topicField.getText()), true);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -75,7 +75,7 @@ public class Visite extends JFrame{
 					return;
 				
 				try {
-					new AfficheListe("Tweets de " + utilisateurField.getText(), client.getTweetUtilisateur(utilisateurField.getText()));
+					new AfficheListe("Tweets de " + utilisateurField.getText(), client.getTweetUtilisateur(utilisateurField.getText()), true);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -83,7 +83,7 @@ public class Visite extends JFrame{
 			}
 			if(listeutilisateur.equals(obj)){
 				try {
-					new AfficheListe("Liste des utilisateurs", client.getListUtilisateurs());
+					new AfficheListe("Liste des utilisateurs", client.getListUtilisateurs(), false);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -91,7 +91,7 @@ public class Visite extends JFrame{
 			}
 			if(listetopic.equals(obj)){
 				try {
-					new AfficheListe("Liste des topics", client.getListTopics());
+					new AfficheListe("Liste des topics", client.getListTopics(), false);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

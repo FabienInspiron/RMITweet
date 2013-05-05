@@ -56,7 +56,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		listeTweet = new ArrayList<Twitt>();
 		listePersonne = new ArrayList<Personne>();
 		listeFollower = new HashMap<String, ArrayList<InterfaceClient>>();
-		listeTopic = new HashSet();
+		listeTopic = new HashSet<String>();
 		loadTweet();
 		loadPersonne();
 	}

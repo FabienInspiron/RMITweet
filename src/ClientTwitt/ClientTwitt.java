@@ -1,6 +1,5 @@
 package ClientTwitt;
 
-import java.awt.List;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -18,6 +17,7 @@ import ServeurTwitt.RMISSLServerSocketFactory;
 import ServeurTwitt.Twitt;
 
 public class ClientTwitt extends UnicastRemoteObject implements Serializable, InterfaceClient{
+	
 	public static final int PORT = 2001;
 	
 	/**

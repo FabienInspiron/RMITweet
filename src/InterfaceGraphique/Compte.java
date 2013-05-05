@@ -79,7 +79,7 @@ public class Compte extends JFrame{
 				
 				//Méthode qui prend en param un topic et retourne une liste de tweet à afficher
 				try {
-					new AfficheListe(topicField.getText(), client.getTweetTopic(topicField.getText()));
+					new AfficheListe(topicField.getText(), client.getTweetTopic(topicField.getText()), true);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -91,7 +91,7 @@ public class Compte extends JFrame{
 					return;
 				
 				try {
-					new AfficheListe("Tweets de " + utilisateurField.getText(), client.getTweetUtilisateur(utilisateurField.getText()));
+					new AfficheListe("Tweets de " + utilisateurField.getText(), client.getTweetUtilisateur(utilisateurField.getText()), true);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -119,7 +119,7 @@ public class Compte extends JFrame{
 				//Afficher tous les followers de ClientTweet 	
 			
 				try {
-					new AfficheListe("Followers de " + client.getPersonne().getPseudo(), client.getFollowers(client));
+					new AfficheListe("Followers de " + client.getPersonne().getPseudo(), client.getFollowers(client), false);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
