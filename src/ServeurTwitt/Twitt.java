@@ -1,11 +1,14 @@
 package ServeurTwitt;
 
+import java.awt.GridLayout;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  * Definition de la classe tweet
@@ -55,5 +58,15 @@ public class Twitt implements Serializable{
 	
 	public void setPersonne(Personne p){
 		this.personne = p;
-	}	
+	}
+	
+	public ImageIcon getIc() {
+		return new ImageIcon();
+	}
+	
+	public JPanel getImagePanel(){
+		JPanel jp2 = new JPanel();
+		jp2.add(new JLabel(this.toString()));
+		return jp2;
+	}
 }

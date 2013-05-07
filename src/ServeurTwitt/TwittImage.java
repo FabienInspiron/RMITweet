@@ -1,8 +1,13 @@
 package ServeurTwitt;
 
-import javax.swing.ImageIcon;
+import java.awt.GridLayout;
+import java.io.Serializable;
 
-public class TwittImage extends Twitt{
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class TwittImage extends Twitt implements Serializable{
 	
 	private ImageIcon ic;
 	
@@ -29,5 +34,16 @@ public class TwittImage extends Twitt{
 		String s= super.toString();
 		s += "\n Image : " + ic.toString();
 		return s;
+	}
+	
+	@Override
+	public JPanel getImagePanel(){
+		JPanel jp2 = new JPanel();
+		jp2.setLayout(new GridLayout(1, 2));
+		JLabel label = new JLabel(this.getIc());
+		
+		jp2.add(label);
+		jp2.add(new JLabel(this.toString()));
+		return jp2;
 	}
 }
