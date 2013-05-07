@@ -1,6 +1,7 @@
 package ClientTwitt;
 
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -43,21 +44,16 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 			}
 			
 			interPublic = (InterfacePublic) Naming.lookup("rmi://localhost:"+PORT+"/MonOD");		
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Client connecté");
+			pers = new Personne();
+			interfPrivee = null;
+			listeRecu = new ArrayList<Twitt>();
+			new InterfaceGraphique.Twitter(this);
+			
+		}catch(Exception e){
+			System.err.println("--- Veuillez lancer le serveur en premier ---");
+			//e.printStackTrace();
 		}
-		System.out.println("Client connecté");
-		
-		pers = new Personne();
-		interfPrivee = null;
-		listeRecu = new ArrayList<Twitt>();
 	}
 	
 	/**
@@ -90,7 +86,6 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 		try {
 			cl1 = new ClientTwitt();
 			//new InterfaceGraphique.Connexion(cl1);
-			new InterfaceGraphique.Twitter(cl1);
 
 		} catch (RemoteException e) {
 			e.printStackTrace();
