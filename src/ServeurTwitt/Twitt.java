@@ -1,6 +1,5 @@
 package ServeurTwitt;
 
-import java.awt.GridLayout;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,12 +35,21 @@ public class Twitt implements Serializable{
 		date = new Date();
 	}
 	
+	/**
+	 * Deuxième constructeur normal
+	 * @param topic
+	 * @param message
+	 */
 	public Twitt(String topic, String message) {
 		this.topic = topic;
 		this.message = message;
 		this.personne = null;
 	}
 	
+	/**
+	 * Accesseur en lecture de l'attribut topic
+	 * @return
+	 */
 	public String getTopic() {
 		return topic;
 	}
@@ -57,6 +65,11 @@ public class Twitt implements Serializable{
 		return retour;
 	}
 	
+	/**
+	 * toString spécial pour écrire dans les JLabel par exemple
+	 * il permet de mettre de couleur et d'avoir une mise en forme particulière
+	 * @return
+	 */
 	public String toStringHTML(){
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		String dateString = dateFormat.format(date);
@@ -77,14 +90,26 @@ public class Twitt implements Serializable{
 		return str;
 	}
 	
+	/**
+	 * Accesseur en écriture de l'attribut personne
+	 * @param p
+	 */
 	public void setPersonne(Personne p){
 		this.personne = p;
 	}
 	
+	/**
+	 * Retourne une nouvelle ImageIcon
+	 * @return
+	 */
 	public ImageIcon getIc() {
 		return new ImageIcon();
 	}
 	
+	/**
+	 * Cette méthode sert uniquement lors de l'affichage graphique d'un tweet
+	 * @return JPanel avec les informations contenues dans un twitt
+	 */
 	public JPanel getImagePanel(){
 		JPanel jp2 = new JPanel();
 		jp2.add(new JLabel(this.toStringHTML()));

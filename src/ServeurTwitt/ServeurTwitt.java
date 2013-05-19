@@ -38,7 +38,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	
 	private ArrayList<Twitt> listeTweet;
 	private ArrayList<Personne> listePersonne;
-	private HashSet<String> listeTopic;
+	private HashSet<String> listeTopic; // le HashSet permet de ne pas stocker deux fois le même topic
 	
 	/**
 	 * Un personne peut suivre ce que fait un autre personne
@@ -53,11 +53,14 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	File fichierTweet = new File("tweets.txt");
 	File fichierPersonnes = new File("personnes.txt");
 	
-
+	/**
+	 * Eléments utilisés pour l'interface graphique
+	 */
 	private ActionListenerServeur alc = new ActionListenerServeur();
 	private JButton stop = new JButton("Stop");
 	private JButton refresh = new JButton("Refresh");
 	private JFrame jf = new JFrame("Serveur Twitter");
+	
 	/**
 	 * Constructeur normal
 	 * @throws RemoteException
@@ -74,6 +77,52 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		graphicFrame();
 	}
 	
+	/**
+	 * Lancer le serveur
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		InterfacePublic rm;
+		try {
+			Registry reg=LocateRegistry.createRegistry(PORT);
+			
+			 // Assign security manager
+		    if (System.getSecurityManager() == null)
+		    {
+		        System.setSecurityManager   (new RMISecurityManager());
+		    }
+			
+			RMISSLClientSocketFactory clientSocket = new RMISSLClientSocketFactory();
+			RMISSLServerSocketFactory serveurSocket = new RMISSLServerSocketFactory();
+			
+			rm = new ServeurTwitt(clientSocket, serveurSocket);
+			
+			try {
+				Naming.rebind("rmi://localhost:"+PORT+"/MonOD", rm);
+				System.out.println("Serveur lancÃ© sur le port " + PORT);
+				
+				System.out.println("Pour eteindre le serveur touche c: ");
+				Scanner sc = new Scanner(System.in);
+				sc.next();
+				ServeurTwitt s = (ServeurTwitt)rm;
+				s.close();
+				System.out.println("Serveur Ã©teint");
+				
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}finally{
+			//rm.close();
+		}
+	}
+	
+	/**
+	 * Fenêtre graphique
+	 */
 	public void graphicFrame(){
 		jf = new JFrame("Serveur Twitter");
 		stop.addActionListener(alc);
@@ -92,6 +141,11 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		jf.setVisible(true);	
 	}
 
+	/**
+	 * ActionListener sur les boutons de l'interface graphique
+	 * @author user
+	 *
+	 */
 	private class ActionListenerServeur implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			Object obj = event.getSource();
@@ -105,6 +159,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			}			
 		}
 	}
+	
 	/**
 	 * Ajouter un tweet a la liste en verifiant 
 	 * que le client Ã  la possibilitÃ© de le faire
@@ -246,6 +301,9 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		listeTweet.remove(t);
 	}
 	
+	/**
+	 * Sérialiser un tweet dans un fichier
+	 */
 	private void storeTweet(){
 		try {
 			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fichierTweet));
@@ -256,6 +314,9 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		}
 	}
 	
+	/**
+	 * Sérialiser une personne dans un fichier
+	 */
 	private void storePersonne(){
 		try {
 			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fichierPersonnes));
@@ -266,6 +327,9 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		}
 	}
 	
+	/**
+	 * Déserialiser les tweets
+	 */
 	private void loadTweet(){
 		try {
 			ObjectInputStream is = new ObjectInputStream(new FileInputStream(fichierTweet));
@@ -277,10 +341,13 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			listeTweet = new ArrayList<Twitt>();
 		}
 
-		System.out.println("Fichier tweet chargÃ© : " + listeTweet.size() + " lignes");
+		System.out.println("Fichier tweet chargé : " + listeTweet.size() + " lignes");
 	}
 	
 	
+	/**
+	 * Déserialiser les personnes
+	 */
 	private void loadPersonne(){
 		try {
 			ObjectInputStream is = new ObjectInputStream(new FileInputStream(fichierPersonnes));
@@ -291,7 +358,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			listePersonne = new ArrayList<Personne>();
 		}
 		
-		System.out.println("Fichier personne chargÃ© : " + listePersonne.size() + " lignes");
+		System.out.println("Fichier personne chargé : " + listePersonne.size() + " lignes");
 	}
 	
 	/**
@@ -313,7 +380,6 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		System.out.println("\n");
 	}
 	
-
 
 	/**
 	 * Inscription de la personne a la base de donnÃ©e des personnes
@@ -339,6 +405,12 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		return true;
 	}
 	
+	
+	/**
+	 * Savoir si une personne existe
+	 * @param pers
+	 * @return
+	 */
 	public boolean exist(Personne pers){
 		for (Personne p : listePersonne) {
 			if(p.is_equals(pers)){
@@ -369,45 +441,6 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	@Override
 	public void logOff(ClientTwitt p) throws RemoteException {
 		p.getPersonne().disconect();
-	}
-	
-	public static void main(String[] args) {
-		InterfacePublic rm;
-		try {
-			Registry reg=LocateRegistry.createRegistry(PORT);
-			
-			 // Assign security manager
-		    if (System.getSecurityManager() == null)
-		    {
-		        System.setSecurityManager   (new RMISecurityManager());
-		    }
-			
-			RMISSLClientSocketFactory clientSocket = new RMISSLClientSocketFactory();
-			RMISSLServerSocketFactory serveurSocket = new RMISSLServerSocketFactory();
-			
-			rm = new ServeurTwitt(clientSocket, serveurSocket);
-			
-			try {
-				Naming.rebind("rmi://localhost:"+PORT+"/MonOD", rm);
-				System.out.println("Serveur lancÃ© sur le port " + PORT);
-				
-				System.out.println("Pour eteindre le serveur touche c: ");
-				Scanner sc = new Scanner(System.in);
-				sc.next();
-				ServeurTwitt s = (ServeurTwitt)rm;
-				s.close();
-				System.out.println("Serveur Ã©teint");
-				
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}finally{
-			//rm.close();
-		}
 	}
 
 	@Override

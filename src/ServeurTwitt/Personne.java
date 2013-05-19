@@ -19,6 +19,9 @@ public class Personne implements Serializable{
 	private boolean IsConnect;
 	private InetAddress Ip;
 
+	/**
+	 * Constructeur par défaut
+	 */
 	public Personne(){
 		this.pseudo = "";
 		this.nom = "";
@@ -81,6 +84,9 @@ public class Personne implements Serializable{
 		}
 	}
 	
+	// Accesseurs
+	//
+	
 	public String getPrenonNom(){
 		return prenom + " " + nom;
 	}
@@ -102,6 +108,11 @@ public class Personne implements Serializable{
 		this.mdp = mdp;
 	}
 	
+	/**
+	 * Tester deux Personnes si elles sont égales
+	 * @param p
+	 * @return true si elles ont le même pseudo et mdp
+	 */
 	public boolean is_equals(Personne p){
 		return (p.pseudo.equals(pseudo) && p.mdp.equals(mdp));
 	}
