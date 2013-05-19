@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+
 /**
  * Definition de la classe tweet
  * qui doit pourvoir sauvergader les tweet dans un fichier
@@ -56,6 +57,26 @@ public class Twitt implements Serializable{
 		return retour;
 	}
 	
+	public String toStringHTML(){
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String dateString = dateFormat.format(date);
+		
+		String str = "<HTML>";
+		str += "<strong><font color=black size=\"14\">"+ personne.getPseudo() +"</font></strong>";
+		str += "<br/>";
+		if(topic.length()>=20)
+			str += "<strong><font color=#4EE2EC size=\"14\">#"+ topic.substring(0, 20) +"</font></strong>";
+		else
+			str += "<strong><font color=#4EE2EC size=\"14\">#"+ topic +"</font></strong>";
+		str += "<br/>";	
+		str += "<strong><font color=#5FFB17>"+ dateString +"</font></strong>";
+		str += "<br/>";	
+		str += "<font color=black>"+ message +"</font>";
+		str += "<br/>";	
+		str += "</HTML>";		
+		return str;
+	}
+	
 	public void setPersonne(Personne p){
 		this.personne = p;
 	}
@@ -66,7 +87,7 @@ public class Twitt implements Serializable{
 	
 	public JPanel getImagePanel(){
 		JPanel jp2 = new JPanel();
-		jp2.add(new JLabel(this.toString()));
+		jp2.add(new JLabel(this.toStringHTML()));
 		return jp2;
 	}
 }

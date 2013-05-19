@@ -28,34 +28,44 @@ public class Inscription extends JFrame{
 	private JTextField prenomField = new JTextField();
 	private JLabel login = new JLabel("Login");
 	private JLabel nom = new JLabel("Nom");
-	private JLabel prenom = new JLabel("Prénom");
+	private JLabel prenom = new JLabel("Pr�nom");
 	private JLabel mdp1 = new JLabel("Mot de passe");
-	private JLabel mdp2 = new JLabel("Retapez le mot de passe");
+	private JLabel mdp2 = new JLabel("Retapez-le");
 	private JButton inscription = new JButton("Valider");
-	private JButton annuler = new JButton("Annuler");
+//	private JButton annuler = new JButton("Annuler");
 	private ActionListenerInscription alc = new ActionListenerInscription();
 	
 	public Inscription(ClientTwitt cl){
 		super("Inscription");
-		this.setSize(500, 500);
-		getContentPane().setLayout(new BorderLayout());
+		this.setSize(500, 700);
+		getContentPane().setLayout(null);
 		inscription.addActionListener(alc);
-		annuler.addActionListener(alc);
-		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(6, 2));
-		jp.add(login);
-		jp.add(loginField);
-		jp.add(nom);
-		jp.add(nomField);
-		jp.add(prenom);
-		jp.add(prenomField);
-		jp.add(mdp1);
-		jp.add(mdp1Field);
-		jp.add(mdp2);
-		jp.add(mdp2Field);
-		jp.add(inscription);
-		jp.add(annuler);
-		this.add(jp);
+//		annuler.addActionListener(alc);
+		
+		login.setBounds(100, 50, 80, 50);
+		loginField.setBounds(250, 50, 150, 50);
+		nom.setBounds(100, 150, 80, 50);
+		nomField.setBounds(250, 150, 150, 50);
+		prenom.setBounds(100, 250, 80, 50);
+		prenomField.setBounds(250, 250, 150, 50);
+		mdp1.setBounds(100, 350, 80, 50);
+		mdp1Field.setBounds(250, 350, 150, 50);
+		mdp2.setBounds(100, 450, 100, 50);
+		mdp2Field.setBounds(250, 450, 150, 50);
+		inscription.setBounds(170, 550, 160, 50);
+		
+		this.add(login);
+		this.add(loginField);
+		this.add(nom);
+		this.add(nomField);
+		this.add(prenom);
+		this.add(prenomField);
+		this.add(mdp1);
+		this.add(mdp1Field);
+		this.add(mdp2);
+		this.add(mdp2Field);
+		this.add(inscription);
+//		jp.add(annuler);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		client = cl;
@@ -66,10 +76,10 @@ public class Inscription extends JFrame{
 			Object obj = event.getSource();
 	
 			//Si on a cliqué sur le bouton annuler
-			if(annuler.equals(obj)){
-				//Fermer la fenetre			
-				System.exit(EXIT_ON_CLOSE);
-			}
+//			if(annuler.equals(obj)){
+//				//Fermer la fenetre			
+//				System.exit(EXIT_ON_CLOSE);
+//			}
 			
 			//Si on a cliqué sur le bouton inscription
 			if(inscription.equals(obj)){

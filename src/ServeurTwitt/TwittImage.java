@@ -1,6 +1,8 @@
 package ServeurTwitt;
 
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.io.Serializable;
 
 import javax.swing.ImageIcon;
@@ -39,11 +41,12 @@ public class TwittImage extends Twitt implements Serializable{
 	@Override
 	public JPanel getImagePanel(){
 		JPanel jp2 = new JPanel();
-		jp2.setLayout(new GridLayout(1, 2));
-		JLabel label = new JLabel(this.getIc());
+		jp2.setLayout(new FlowLayout());
+		//changer la taille de l'image
+		JLabel label = new JLabel(new ImageIcon(((this.getIc())).getImage().getScaledInstance(110, 110, java.awt.Image.SCALE_SMOOTH)));
 		
 		jp2.add(label);
-		jp2.add(new JLabel(this.toString()));
+		jp2.add(new JLabel(this.toStringHTML()));
 		return jp2;
 	}
 }
