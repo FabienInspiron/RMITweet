@@ -23,7 +23,7 @@ import java.util.Scanner;
 import ClientTwitt.ClientTwitt;
 import ClientTwitt.InterfaceClient;
 
-public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic, InterfacePrivee{
+public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic, InterfacePrivee, InterfaceWebService{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -423,6 +423,15 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			listUtilisateurs.add(p.getPseudo());
 		}
 		return listUtilisateurs;
+	}
+
+	@Override
+	public String getListTopicsString() throws RemoteException {
+		String retour = "";
+		for (String tweet : getListTopics()) {
+			retour += "\n" + tweet;
+		}
+		return retour;
 	}
 
 }
