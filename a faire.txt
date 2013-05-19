@@ -1,9 +1,9 @@
-methode de déconexion
+methode de dÃ©conexion
 
 image
 
-trier topics - par ordre décroissant de popularité, définie sur un certain critère, 
-	          mixant nombre de tweets postés par unité de temps
+trier topics - par ordre dï¿½croissant de popularitï¿½, dï¿½finie sur un certain critï¿½re, 
+	          mixant nombre de tweets postï¿½s par unitï¿½ de temps
 
-trier utilisateurs - par ordre décroissant d'activité, définie sur un certain critère, mixant nombre de tweets par unité de temps, 
+trier utilisateurs - par ordre dï¿½croissant d'activitï¿½, dï¿½finie sur un certain critï¿½re, mixant nombre de tweets par unitï¿½ de temps, 
 					 nombre de followers

@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -16,41 +17,50 @@ import ClientTwitt.ClientTwitt;
 public class Visite extends JFrame{
 
 	private ClientTwitt client;
-	private JButton topic = new JButton("Voir un topic");
-	private JButton utilisateur = new JButton("Voir un utilisateur");
+	private JButton topic = new JButton("OK");
+	private JButton utilisateur = new JButton("OK");
 	private JButton listetopic = new JButton("Voir tous les topics");
 	private JButton listeutilisateur = new JButton("Voir tous les utilisateurs");
 	private JTextField topicField = new JTextField();
 	private JTextField utilisateurField = new JTextField();
 	private ActionListenerVisite alc = new ActionListenerVisite();
+	private JLabel labelUtilisateur = new JLabel("Chercher un utilisateur");
+	private JLabel labelTopic = new JLabel("Chercher un topic");
 	
 	public Visite(ClientTwitt cl){
+
 		super("Visite sur Twitter");
 		
 		this.client = cl;
 		
-		this.setSize(500, 500);
-		getContentPane().setLayout(new BorderLayout());
+		this.setSize(500, 555);
+		getContentPane().setLayout(null);
 
 		topic.addActionListener(alc);
 		utilisateur.addActionListener(alc);
 		listetopic.addActionListener(alc);
 		listeutilisateur.addActionListener(alc);
 
-		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(5, 2));
-
-		jp.add(topic);
-		jp.add(topicField);
-		jp.add(utilisateur);
-		jp.add(utilisateurField);
-		jp.add(listetopic);
-		jp.add(listeutilisateur);
+		listeutilisateur .setBounds(100, 50, 300, 50);
+		labelUtilisateur.setBounds(100, 150, 200, 30);
+		utilisateurField.setBounds(100, 185, 200, 50);
+		utilisateur.setBounds(320, 185, 80, 50);
 		
-		this.add(jp);
+		listetopic.setBounds(100, 285, 300, 50);
+		labelTopic.setBounds(100, 385, 200, 30);
+		topicField.setBounds(100, 415, 200, 50);
+		topic.setBounds(320, 415, 80, 50);
+		
+		this.add(topic);
+		this.add(topicField);
+		this.add(utilisateur);
+		this.add(utilisateurField);
+		this.add(listetopic);
+		this.add(listeutilisateur);
+		this.add(labelTopic);
+		this.add(labelUtilisateur);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		
 	}
 	
 	private class ActionListenerVisite implements ActionListener {

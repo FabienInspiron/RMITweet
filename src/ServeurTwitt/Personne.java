@@ -41,7 +41,7 @@ public class Personne implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Pseudo : " + pseudo + "\nNom : " + nom + "\nPrenom : " + prenom;
+		return "Pseudo : " + pseudo + "\n";
 	}
 	
 	/**

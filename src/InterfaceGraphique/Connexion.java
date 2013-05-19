@@ -27,26 +27,25 @@ public class Connexion extends JFrame {
 	private JPasswordField mdpField = new JPasswordField();
 	private JLabel login = new JLabel("Login");
 	private JLabel mdp = new JLabel("Mot de passe");
-	private JButton connexion = new JButton("Connexion");
-	private JButton inscription = new JButton("Inscription");
+	private JButton connexion = new JButton("Connecter");
 	private ActionListenerConnexion alc = new ActionListenerConnexion();
 	
 	public Connexion(ClientTwitt cl){
 		super("Connexion");
-		this.setSize(500, 500);
-		getContentPane().setLayout(new BorderLayout());
+		this.setSize(480, 400);
+		getContentPane().setLayout(null);
 		connexion.addActionListener(alc);
-		inscription.addActionListener(alc);
-		loginField.setPreferredSize(new Dimension(2, 2));
-		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(3, 2));
-		jp.add(login);
-		jp.add(loginField);
-		jp.add(mdp);
-		jp.add(mdpField);
-		jp.add(connexion);
-		jp.add(inscription);
-		this.add(jp);
+		
+		login.setBounds(100, 50, 80, 50);
+		loginField.setBounds(230, 50, 150, 50);
+		mdp.setBounds(100, 150, 80, 50);
+		mdpField.setBounds(230, 150, 150, 50);
+		connexion.setBounds(160, 250, 160, 50);
+		this.add(login);
+		this.add(loginField);
+		this.add(mdp);
+		this.add(mdpField);
+		this.add(connexion);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		client = cl;
@@ -82,14 +81,7 @@ public class Connexion extends JFrame {
 				}
 			}
 			
-			/**
-			 * Cliquer sur le bouton inscription
-			 */
-			if(inscription.equals(obj)){
-				//Ouvrir une nouvelle fenetre
-				new Inscription(client);
-				dispose();
-			}			
+		
 		}
 	}
 	

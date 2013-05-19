@@ -1,6 +1,7 @@
 package InterfaceGraphique;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +9,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,21 +21,23 @@ import ServeurTwitt.Twitt;
 public class Twitter extends JFrame{
 	
 	private ClientTwitt client;
-	private JButton connexion = new JButton("Connexion/Inscription");
+	private JButton connexion = new JButton("Connexion");
+	private JButton inscription = new JButton("Inscription");
 	private JButton visite = new JButton("Visiter (Mode non authentifié)");
 	private ActionListenerClient alc = new ActionListenerClient();
-	
 	public Twitter(ClientTwitt cl){
 		super("Bienvenue sur Twitter");
-		this.setSize(500, 500);
-		getContentPane().setLayout(new BorderLayout());
+		this.setSize(400, 400);
+		getContentPane().setLayout(null);
 		connexion.addActionListener(alc);
+		inscription.addActionListener(alc);
 		visite.addActionListener(alc);
-		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(2, 1));
-		jp.add(connexion);
-		jp.add(visite);
-		this.add(jp);
+		connexion.setBounds(100, 50, 200, 50);
+		inscription.setBounds(100, 150, 200, 50);
+		visite.setBounds(100, 250, 200, 50);
+		this.add(connexion);
+		this.add(visite);
+		this.add(inscription);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		client = cl;
@@ -50,6 +54,11 @@ public class Twitter extends JFrame{
 			if(visite.equals(obj)){
 				//Mode non authentifié
 				new Visite(client);
+			}
+			if(inscription.equals(obj)){
+				//Ouvrir une nouvelle fenetre
+				new Inscription(client);
+				dispose();
 			}	
 		}
 	}
