@@ -1,0 +1,14 @@
+grant Principal security.module.SamplePrincipal "testUser" {
+//permission java.security.AllPermission ;
+	permission 	java.io.FilePermission // dans notre exemple, l'objet ResultatFils pex. a besoin d'avoir le droit acces ds rep courant
+  		".${/}*", "read, write" ; 
+};
+	
+grant {
+   permission java.net.SocketPermission "localhost:1024-",
+  		 "connect, accept, resolve";
+   permission javax.security.auth.AuthPermission "createLoginContext.MonServeur";
+   permission javax.security.auth.AuthPermission "modifyPrincipals";
+   permission javax.security.auth.AuthPermission "doAsPrivileged";
+   //permission java.security.AllPermission ;
+};

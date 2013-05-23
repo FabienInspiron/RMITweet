@@ -1,11 +1,16 @@
-package ServeurTwitt;
+package Interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
+
+import ServeurTwitt.Personne;
+import ServeurTwitt.Twitt;
+
 import ClientTwitt.ClientTwitt;
-import ClientTwitt.InterfaceClient;
 
 /**
  * Interface disponible lorsque le client est connecté

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
+import javax.security.auth.login.LoginException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -64,17 +65,15 @@ public class Connexion extends JFrame {
 				//Ouvrir son compte
 				//new Compte(clientTweet);
 				try {
-					client.Connexion(loginField.getText(), mdpField.getText());
 					try {
+						client.Connexion(loginField.getText(), mdpField.getText());
 						new Compte(client);
-					} catch (HeadlessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						dispose();
+					} catch (RemoteException e1) {
+						System.out.println("Impossible de joindre le serveur");
+					} catch (LoginException e1) {
+						System.out.println("Login ou mot de passe incorrect");
 					}
-					dispose();
 				} catch (ConnexionException e) {
 					// TODO Auto-generated catch block
 					System.out.println("Connexion impossible");

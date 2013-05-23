@@ -1,8 +1,5 @@
 package ServeurTwitt;
 
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,17 +17,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Scanner;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 
 import ClientTwitt.ClientTwitt;
-import ClientTwitt.InterfaceClient;
+import Interfaces.InterfaceClient;
+import Interfaces.InterfacePrivee;
+import Interfaces.InterfacePublic;
+import Interfaces.InterfaceWebService;
 
-public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic, InterfacePrivee, InterfaceWebService{
+public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic, InterfacePrivee, InterfaceWebService {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -38,7 +36,9 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	
 	private ArrayList<Twitt> listeTweet;
 	private ArrayList<Personne> listePersonne;
-	private HashSet<String> listeTopic; // le HashSet permet de ne pas stocker deux fois le même topic
+	private HashSet<String> listeTopic; // le HashSet permet de ne pas stocker deux fois le mï¿½me topic
+	
+	LoginContext lc;
 	
 	/**
 	 * Un personne peut suivre ce que fait un autre personne
@@ -53,13 +53,8 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	File fichierTweet = new File("tweets.txt");
 	File fichierPersonnes = new File("personnes.txt");
 	
-	/**
-	 * Eléments utilisés pour l'interface graphique
-	 */
-	private ActionListenerServeur alc = new ActionListenerServeur();
-	private JButton stop = new JButton("Stop");
-	private JButton refresh = new JButton("Refresh");
-	private JFrame jf = new JFrame("Serveur Twitter");
+	
+	ServeurGraphique graph;
 	
 	/**
 	 * Constructeur normal
@@ -74,7 +69,6 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		listeTopic = new HashSet<String>();
 		loadTweet();
 		loadPersonne();
-		graphicFrame();
 	}
 	
 	/**
@@ -95,21 +89,14 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			RMISSLClientSocketFactory clientSocket = new RMISSLClientSocketFactory();
 			RMISSLServerSocketFactory serveurSocket = new RMISSLServerSocketFactory();
 			
+			// Instanciantion du stub
 			rm = new ServeurTwitt(clientSocket, serveurSocket);
 			
 			try {
 				Naming.rebind("rmi://localhost:"+PORT+"/MonOD", rm);
 				System.out.println("Serveur lancÃ© sur le port " + PORT);
 				
-				System.out.println("Pour eteindre le serveur touche c: ");
-				Scanner sc = new Scanner(System.in);
-				sc.next();
-				ServeurTwitt s = (ServeurTwitt)rm;
-				s.close();
-				System.out.println("Serveur Ã©teint");
-				
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -120,45 +107,24 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		}
 	}
 	
-	/**
-	 * Fenêtre graphique
-	 */
-	public void graphicFrame(){
-		jf = new JFrame("Serveur Twitter");
-		stop.addActionListener(alc);
-		refresh.addActionListener(alc);
-		jf.setSize(300, 150);
-		JPanel jp = new JPanel();
-		JPanel jp2 = new JPanel();
-		jp.setLayout(new GridLayout(1, 2));
-		jp.add(new JLabel("Serveur lancï¿½"));
-		jp2.setLayout(new GridLayout(2, 1));
-		jp2.add(stop);
-		jp2.add(refresh);
-		jp.add(jp2);
-		jf.add(jp);                          
-		jf.setLocationRelativeTo(null);
-		jf.setVisible(true);	
-	}
-
-	/**
-	 * ActionListener sur les boutons de l'interface graphique
-	 * @author user
-	 *
-	 */
-	private class ActionListenerServeur implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			Object obj = event.getSource();
-	
-			if(stop.equals(obj)){
-				
-			}
-			
-			if(refresh.equals(obj)){
-
-			}			
+	@Override
+	public Subject logon(String username, String passwd) throws RemoteException, LoginException{
+		// Verifier si l'utilisateur a bien donnï¿½ un login et passwd egaux ï¿½ testUser et testPasswd
+		// Si non, renvoyer une instance de LoginException 
+		
+		lc = new LoginContext("MonServeur", new security.module.TwitterCallbackHandler(username, passwd));
+		
+		try{
+			lc.login();
 		}
-	}
+		catch (LoginException e){
+			System.out.println("Identifiants incorrect");
+			throw e;
+		}
+		
+		// Retourner l'interface privee
+		return lc.getSubject();
+	}	
 	
 	/**
 	 * Ajouter un tweet a la liste en verifiant 
@@ -268,7 +234,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 * @param mdp
 	 * @return
 	 */
-	public InterfacePrivee connexion(String login, String mdp) throws RemoteException, ConnexionException{
+	public InterfacePrivee connexion(String login, String mdp) throws ConnexionException, RemoteException{
 		for (Personne p : listePersonne) {
 			if(p.connect(login, mdp)){
 				p.connect();
@@ -277,6 +243,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 				return rmico;
 			}
 		}
+		
 		throw new ConnexionException();
 	}
 		
@@ -302,7 +269,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	}
 	
 	/**
-	 * Sérialiser un tweet dans un fichier
+	 * Sï¿½rialiser un tweet dans un fichier
 	 */
 	private void storeTweet(){
 		try {
@@ -315,7 +282,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	}
 	
 	/**
-	 * Sérialiser une personne dans un fichier
+	 * Sï¿½rialiser une personne dans un fichier
 	 */
 	private void storePersonne(){
 		try {
@@ -328,7 +295,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	}
 	
 	/**
-	 * Déserialiser les tweets
+	 * Dï¿½serialiser les tweets
 	 */
 	private void loadTweet(){
 		try {
@@ -341,12 +308,12 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			listeTweet = new ArrayList<Twitt>();
 		}
 
-		System.out.println("Fichier tweet chargé : " + listeTweet.size() + " lignes");
+		System.out.println("Fichier tweet chargï¿½ : " + listeTweet.size() + " lignes");
 	}
 	
 	
 	/**
-	 * Déserialiser les personnes
+	 * Dï¿½serialiser les personnes
 	 */
 	private void loadPersonne(){
 		try {
@@ -358,7 +325,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			listePersonne = new ArrayList<Personne>();
 		}
 		
-		System.out.println("Fichier personne chargé : " + listePersonne.size() + " lignes");
+		System.out.println("Fichier personne chargï¿½ : " + listePersonne.size() + " lignes");
 	}
 	
 	/**
@@ -441,6 +408,12 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	@Override
 	public void logOff(ClientTwitt p) throws RemoteException {
 		p.getPersonne().disconect();
+		try {
+			lc.logout();
+		} catch (LoginException e) {
+			System.out.println("Impossible de se deconnecter");
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -501,6 +474,11 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			listUtilisateurs.add(p.getPseudo());
 		}
 		return listUtilisateurs;
+	}
+
+	@Override
+	public InterfacePrivee getService(Subject s) throws RemoteException {
+		return this;
 	}
 
 	@Override

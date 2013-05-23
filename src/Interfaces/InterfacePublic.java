@@ -1,13 +1,15 @@
-package ServeurTwitt;
+package Interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import javax.management.OperationsException;
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
 
-import ClientTwitt.ClientTwitt;
-import ClientTwitt.InterfaceClient;
+import ServeurTwitt.ConnexionException;
+import ServeurTwitt.Personne;
+import ServeurTwitt.Twitt;
 
 public interface InterfacePublic extends Remote{
 	/**
@@ -17,7 +19,7 @@ public interface InterfacePublic extends Remote{
 	 * @return
 	 * @throws RemoteException
 	 */
-	public InterfacePrivee connexion(String login, String mdp) throws RemoteException, ConnexionException;
+	public InterfacePrivee connexion(String login, String mdp) throws ConnexionException, RemoteException;
 	
 	/**
 	 * Inscription d'un personne au service de tweet
@@ -56,4 +58,21 @@ public interface InterfacePublic extends Remote{
 	 */
 	public ArrayList<String> getListUtilisateurs() throws RemoteException;
 	
+	/**
+	 * Métode d'authentification avec JAAS
+	 * @param username
+	 * @param passwd
+	 * @return
+	 * @throws RemoteException
+	 * @throws LoginException
+	 */
+	Subject logon(String username, String passwd)
+			throws RemoteException, LoginException;
+	
+	/**
+	 * Retourn le subject du client
+	 * @return
+	 * @throws RemoteException
+	 */
+	public InterfacePrivee getService(Subject s) throws RemoteException;
 }
