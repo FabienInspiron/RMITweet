@@ -15,10 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import ClientTwitt.ClientTwitt;
+import Interfaces.Util;
 import ServeurTwitt.Twitt;
 import ServeurTwitt.TwittImage;
-
-import ClientTwitt.ClientTwitt;
 
 public class EcrireTweet extends JFrame{
 
@@ -75,7 +75,7 @@ public class EcrireTweet extends JFrame{
 					client.twitter(t);
 					dispose();
 				} catch (RemoteException e) {
-					System.out.println("Impossible d'envoyer le tweet");
+					Util.message("Impossible d'envoyer le tweet");
 				}
 			}
 			if(openButton.equals(obj)){

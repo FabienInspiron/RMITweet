@@ -1,9 +1,5 @@
 package InterfaceGraphique;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -12,13 +8,12 @@ import javax.security.auth.login.LoginException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import ServeurTwitt.ConnexionException;
-
 import ClientTwitt.ClientTwitt;
+import Interfaces.Util;
+import ServeurTwitt.ConnexionException;
 
 public class Connexion extends JFrame {
 	
@@ -70,9 +65,9 @@ public class Connexion extends JFrame {
 						new Compte(client);
 						dispose();
 					} catch (RemoteException e1) {
-						System.out.println("Impossible de joindre le serveur");
+						Util.message("Impossible de joindre le serveur");
 					} catch (LoginException e1) {
-						System.out.println("Login ou mot de passe incorrect");
+						Util.message("Login ou mot de passe incorrect");
 					}
 				} catch (ConnexionException e) {
 					// TODO Auto-generated catch block

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
+import javax.swing.JOptionPane;
 
 import Interfaces.InterfaceClient;
 import Interfaces.InterfacePrivee;
@@ -70,7 +71,7 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 			new InterfaceGraphique.Twitter(this);
 			
 		}catch(Exception e){
-			System.err.println("--- Veuillez lancer le serveur en premier ---");
+			message("Veuillez lancer le serveur en premier");
 		}
 	}
 	
@@ -222,6 +223,15 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 	 */
 	public ArrayList<Personne> getFollowers(ClientTwitt ct) throws RemoteException{
 		return interPrivee.getFollowers(ct, sujet);
+	}
+	
+	/***
+	 * Afficher un message à l'utilisateur
+	 * @param text
+	 */
+	public static void message(String text){
+		JOptionPane.showMessageDialog(null, text);
+		System.out.println(text);
 	}
 
 }

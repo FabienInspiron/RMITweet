@@ -1,5 +1,8 @@
 package ServeurTwitt;
 
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,7 +17,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,12 +25,19 @@ import java.util.Iterator;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import ClientTwitt.ClientTwitt;
 import Interfaces.InterfaceClient;
 import Interfaces.InterfacePrivee;
 import Interfaces.InterfacePublic;
 import Interfaces.InterfaceWebService;
+import Interfaces.Util;
 
 public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic, InterfacePrivee, InterfaceWebService {
 	
@@ -60,7 +69,14 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 */
 	private ArrayList<Subject> listSubject;
 	
-	ServeurGraphique graph;
+	/**
+	 * El�ments utilis�s pour l'interface graphique
+	 */
+	private ActionListenerServeur alc = new ActionListenerServeur();
+	private JButton stop = new JButton("Stop");
+	private JButton refresh = new JButton("Refresh");
+	protected JFrame jf = new JFrame("Serveur Twitter");
+	private JTextArea textArea = new JTextArea("Serveur lancé... \nEvenements : \n", 10, 5);
 	
 	/**
 	 * Constructeur normal
@@ -76,7 +92,50 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		listSubject = new ArrayList<Subject>();
 		loadTweet();
 		loadPersonne();
+		graphicFrame();
 	}
+	
+	/**
+	 * Fen�tre graphique
+	 */
+	public void graphicFrame(){
+		jf = new JFrame("Serveur Twitter");
+		stop.addActionListener(alc);
+		refresh.addActionListener(alc);
+		jf.setSize(300, 150);
+		JPanel jp = new JPanel();
+		JPanel jp2 = new JPanel();
+		jp.setLayout(new GridLayout(1, 2));
+		textArea.setEditable(false);
+		jp.add(textArea);
+		jp2.setLayout(new GridLayout(2, 1));
+		jp2.add(stop);
+		jp2.add(refresh);
+		jp.add(jp2);
+		jf.add(jp);                          
+		jf.setLocationRelativeTo(null);
+		jf.setVisible(true);	
+	}
+	
+	/**
+	 * ActionListener sur les boutons de l'interface graphique
+	 * @author user
+	 *
+	 */
+	private class ActionListenerServeur implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			Object obj = event.getSource();
+	
+			if(stop.equals(obj)){
+				
+			}
+			
+			if(refresh.equals(obj)){
+
+			}			
+		}
+	}
+
 	
 	/**
 	 * Lancer le serveur
@@ -105,6 +164,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
+				Util.message("Impossible de reconnaitre l'URL");
 			} catch(ExportException e) {
 				System.err.println("Port "+ PORT +" already in use");
 			}
@@ -136,6 +196,8 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		 */
 		listSubject.add(lc.getSubject());
 		
+		displayMSG("Connexion de " + username);
+		
 		// Retourner l'interface privee
 		return lc.getSubject();
 	}	
@@ -155,11 +217,11 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		 */
 		try {
 			if(!exist(c.getPersonne())) {
-				System.out.println("Impossible de twitter " + c.getPersonne());
+				displayMSG("Impossible de twitter " + c.getPersonne());
 				return;
 			}
 			
-			System.out.println(c.getPersonne().getPseudo() + " a ajouté un nouveau tweet");
+			displayMSG(c.getPersonne().getPseudo() + " a ajouté un nouveau tweet");
 			
 			listeTweet.add(t);
 			listeTopic.add(t.getTopic());
@@ -201,7 +263,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			System.out.println("Cette personne n'existe pas");
 		}
 		
-		System.out.println(cl.getPersonne().getPseudo() + " veut suivre " + login);
+		displayMSG(cl.getPersonne().getPseudo() + " veut suivre " + login);
 	}
 	
 	/**
@@ -256,7 +318,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			if(p.connect(login, mdp)){
 				p.connect();
 				InterfacePrivee rmico = this;
-				System.out.println("Connexion de " + login);
+				displayMSG("Connexion de " + login);
 				return rmico;
 			}
 		}
@@ -375,6 +437,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		//if(!alreadyLogin(p.getPseudo()))
 			listePersonne.add(p);
 			storePersonne();
+			displayMSG("Inscription d'un client : " + p.getPrenonNom());
 			System.out.println("Inscription d'un client : " + p.getPrenonNom());
 	}
 	
@@ -526,5 +589,9 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 */
 	public boolean subjectPresent(Subject s){
 		return listSubject.contains(s);
+	}
+	
+	public void displayMSG(String msg){
+		textArea.setText(" - " + textArea.getText() + msg);
 	}
 }

@@ -1,7 +1,5 @@
 package InterfaceGraphique;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -9,13 +7,12 @@ import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import ServeurTwitt.Personne;
-
 import ClientTwitt.ClientTwitt;
+import Interfaces.Util;
+import ServeurTwitt.Personne;
 
 
 public class Inscription extends JFrame{
@@ -28,7 +25,7 @@ public class Inscription extends JFrame{
 	private JTextField prenomField = new JTextField();
 	private JLabel login = new JLabel("Login");
 	private JLabel nom = new JLabel("Nom");
-	private JLabel prenom = new JLabel("Prénom");
+	private JLabel prenom = new JLabel("Prï¿½nom");
 	private JLabel mdp1 = new JLabel("Mot de passe");
 	private JLabel mdp2 = new JLabel("Retapez-le");
 	private JButton inscription = new JButton("Valider");
@@ -99,7 +96,7 @@ public class Inscription extends JFrame{
 					new Connexion(client);
 					dispose();
 				} catch (RemoteException e) {
-					System.out.println("Inscription impossible");
+					Util.message("Inscription impossible");
 				}
 			}			
 		}
