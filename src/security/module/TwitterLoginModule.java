@@ -40,12 +40,18 @@
 
 package security.module;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.*;
+
 import javax.security.auth.*;
 import javax.security.auth.callback.*;
 import javax.security.auth.login.*;
 import javax.security.auth.spi.*;
 
+import ServeurTwitt.Personne;
 import ServeurTwitt.ServeurTwitt;
 
 /**
@@ -74,7 +80,7 @@ public class TwitterLoginModule implements LoginModule {
 
 	// testUser's SamplePrincipal
 	// To Improve
-	private SamplePrincipal userPrincipal;
+	private TwitterPrincipal userPrincipal;
 
 	/**
 	 * Initialize this <code>LoginModule</code>.
@@ -159,9 +165,7 @@ public class TwitterLoginModule implements LoginModule {
 		// verify the username/password
 		boolean usernameCorrect = false;
 		boolean passwordCorrect = false;
-		if (username.equals("tutu"))
-			usernameCorrect = true;
-		if (password.equals("tutu")){
+		if (isValidUser(username, username)){
 
 			// authentication succeeded!!!
 			passwordCorrect = true;
@@ -215,7 +219,7 @@ public class TwitterLoginModule implements LoginModule {
 			// to the Subject
 
 			// assume the user we authenticated is the SamplePrincipal
-			userPrincipal = new SamplePrincipal(username);
+			userPrincipal = new TwitterPrincipal(username);
 			if (!subject.getPrincipals().contains(userPrincipal))
 				subject.getPrincipals().add(userPrincipal);
 
@@ -273,6 +277,46 @@ public class TwitterLoginModule implements LoginModule {
 		return true;
 	}
 
+	
+	/**
+	 * Savoir si une personne est presente dans la liste
+	 * @param user
+	 * @param password
+	 * @return
+	 * @throws LoginException
+	 */
+	private boolean isValidUser(String user, String password) throws LoginException {
+
+		boolean valid =false;
+		
+		for (Personne p : loadPersonne()) {
+			valid = p.connect(user, password);
+		}
+		
+		return valid;
+	}
+
+	/**
+	 * Recuperer la liste des personnes se trouvant dans le fichier
+	 * @return
+	 */
+	private ArrayList<Personne> loadPersonne(){
+		ArrayList<Personne> list = new ArrayList<Personne>();
+		File fichierPersonnes = new File("personnes.txt");
+		
+		try {
+			ObjectInputStream is = new ObjectInputStream(new FileInputStream(fichierPersonnes));
+			list = (ArrayList<Personne>) is.readObject();
+		} catch (IOException e) {
+			list = new ArrayList<Personne>();
+		} catch (ClassNotFoundException e) {
+			list = new ArrayList<Personne>();
+		}
+		
+		return list;
+	}
+
+	
 	/**
 	 * Logout the user.
 	 * 

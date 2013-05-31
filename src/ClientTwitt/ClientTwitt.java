@@ -57,7 +57,7 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 			// 
 			interPublic = (InterfacePublic) Naming.lookup("rmi://localhost:"+PORT+"/MonOD");
 			
-			System.out.println("Client connect�");
+			System.out.println("Client connecté");
 			
 			//Cr�er l'objet personne qui repr�sente le client
 			pers = new Personne();
@@ -90,23 +90,20 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 	
 	/**
 	 * Connexion au client
+	 * 
 	 * @param login
 	 * @param mdp
-	 * @throws LoginException 
-	 * @throws RemoteException 
+	 * @throws LoginException
+	 * @throws RemoteException
 	 */
-	public void Connexion(String login, String mdp) throws ConnexionException, RemoteException, LoginException{
-			// Ajout du login et du mot de passe pour se souvenir du client
-			pers.setLoginMDP(login, mdp);
-			
-			try {
-				sujet = interPublic.logon(login, mdp);
-				interPrivee = interPublic.getService(sujet);
-			} catch (Exception e) {
-				System.out.println("Connexion impossible");
-			}
+	public void Connexion(String login, String mdp) throws ConnexionException,
+			RemoteException, LoginException {
+		// Ajout du login et du mot de passe pour se souvenir du client
+		pers.setLoginMDP(login, mdp);
+		sujet = interPublic.logon(login, mdp);
+		interPrivee = interPublic.getService(sujet);
 	}
-	
+
 	/**
 	 * Recuperation de l'interface de communication avec le serveur
 	 * @return
@@ -205,7 +202,7 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 	 * @throws RemoteException
 	 */
 	public void twitter(Twitt t) throws RemoteException {
-		interPrivee.twitter(t, this);
+		interPrivee.twitter(t, this, sujet);
 	}
 	
 	/**
@@ -214,7 +211,7 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 	 * @throws RemoteException
 	 */
 	public void follower(String login) throws RemoteException{
-		interPrivee.follower(login, this);
+		interPrivee.follower(login, this, sujet);
 	}
 	
 	/**
@@ -224,7 +221,7 @@ public class ClientTwitt extends UnicastRemoteObject implements Serializable, In
 	 * @throws RemoteException
 	 */
 	public ArrayList<Personne> getFollowers(ClientTwitt ct) throws RemoteException{
-		return interPrivee.getFollowers(ct);
+		return interPrivee.getFollowers(ct, sujet);
 	}
 
 }

@@ -23,7 +23,7 @@ public interface InterfacePrivee extends Remote{
 	 * @param t
 	 * @throws RemoteException
 	 */
-	public void twitter(Twitt t, InterfaceClient p) throws RemoteException;
+	public void twitter(Twitt t, InterfaceClient p, Subject s) throws RemoteException;
 	
 	/**
 	 * Relayer un tweet, c'est comme si cette personne l'avait envoyé
@@ -31,14 +31,14 @@ public interface InterfacePrivee extends Remote{
 	 * @param p
 	 * @throws RemoteException
 	 */
-	public void relayerTweet(Twitt t, InterfaceClient p) throws RemoteException;
+	public void relayerTweet(Twitt t, InterfaceClient p, Subject s) throws RemoteException;
 	
 	/**
 	 * Follower un tweet c'est s'incrire pour suivre ce qu'envoi une personne
 	 * @param login est le pseudo de la personne que l'on souhaite suivre
 	 * @throws RemoteException
 	 */
-	public void follower(String login, InterfaceClient c) throws RemoteException;
+	public void follower(String login, InterfaceClient c, Subject s) throws RemoteException;
 	
 	/**
 	 * Retourne la liste des followers d'un client ct
@@ -46,12 +46,12 @@ public interface InterfacePrivee extends Remote{
 	 * @return
 	 * @throws RemoteException
 	 */
-	public ArrayList<Personne> getFollowers(InterfaceClient ct) throws RemoteException;
+	public ArrayList<Personne> getFollowers(InterfaceClient ct, Subject s) throws RemoteException;
 	
 	/**
 	 * Permet à une personne de se deconnecter
 	 * @param p
 	 * @throws RemoteException
 	 */
-	public void logOff(ClientTwitt p) throws RemoteException;
+	public void logOff(ClientTwitt p, Subject s) throws RemoteException;
 }

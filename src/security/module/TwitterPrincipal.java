@@ -1,6 +1,6 @@
 package security.module;
 
-public class SamplePrincipal implements java.security.Principal,
+public class TwitterPrincipal implements java.security.Principal,
 		java.io.Serializable {
 	/**
 	 * 
@@ -9,13 +9,12 @@ public class SamplePrincipal implements java.security.Principal,
 
 	String name = null;
 
-	public SamplePrincipal(String name) {
+	public TwitterPrincipal(String name) {
 		this.name = name;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return name;
 	}
 
@@ -30,9 +29,9 @@ public class SamplePrincipal implements java.security.Principal,
 		if (this == o)
 			return true;
 
-		if (!(o instanceof SamplePrincipal))
+		if (!(o instanceof TwitterPrincipal))
 			return false;
-		SamplePrincipal that = (SamplePrincipal) o;
+		TwitterPrincipal that = (TwitterPrincipal) o;
 
 		if (this.getName().equals(that.getName()))
 			return true;

@@ -12,7 +12,9 @@ import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,6 +55,10 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	File fichierTweet = new File("tweets.txt");
 	File fichierPersonnes = new File("personnes.txt");
 	
+	/**
+	 * Liste des Subjects
+	 */
+	private ArrayList<Subject> listSubject;
 	
 	ServeurGraphique graph;
 	
@@ -67,6 +73,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		listePersonne = new ArrayList<Personne>();
 		listeFollower = new HashMap<String, ArrayList<InterfaceClient>>();
 		listeTopic = new HashSet<String>();
+		listSubject = new ArrayList<Subject>();
 		loadTweet();
 		loadPersonne();
 	}
@@ -98,6 +105,8 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
+			} catch(ExportException e) {
+				System.err.println("Port "+ PORT +" already in use");
 			}
 			
 		} catch (RemoteException e) {
@@ -122,6 +131,11 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			throw e;
 		}
 		
+		/**
+		 * Ajout du Subject dans la liste
+		 */
+		listSubject.add(lc.getSubject());
+		
 		// Retourner l'interface privee
 		return lc.getSubject();
 	}	
@@ -132,7 +146,10 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 * 
 	 * @param t
 	 */
-	public void twitter(Twitt t, InterfaceClient c){
+	public void twitter(Twitt t, InterfaceClient c, Subject s){
+		if(!subjectPresent(s))
+			return;
+		
 		/**
 		 * Verifire que le tweet à été envoyé par la bonne personne
 		 */
@@ -256,8 +273,9 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	}
 	
 	@Override
-	public void follower(String login, InterfaceClient cl) throws RemoteException {
-		addFollower(login, cl);
+	public void follower(String login, InterfaceClient cl, Subject s) throws RemoteException {
+		if(subjectPresent(s))
+			addFollower(login, cl);
 	}
 
 	/**
@@ -350,11 +368,13 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 
 	/**
 	 * Inscription de la personne a la base de donnée des personnes
+	 * Remet le fichier à jour
 	 */
 	@Override
 	public void inscription(Personne p) throws RemoteException {
 		//if(!alreadyLogin(p.getPseudo()))
 			listePersonne.add(p);
+			storePersonne();
 			System.out.println("Inscription d'un client : " + p.getPrenonNom());
 	}
 	
@@ -406,7 +426,10 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	}
 
 	@Override
-	public void logOff(ClientTwitt p) throws RemoteException {
+	public void logOff(ClientTwitt p, Subject s) throws RemoteException {
+		if(!subjectPresent(s))
+			return;
+					
 		p.getPersonne().disconect();
 		try {
 			lc.logout();
@@ -417,7 +440,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	}
 
 	@Override
-	public void relayerTweet(Twitt t, InterfaceClient p) throws RemoteException {
+	public void relayerTweet(Twitt t, InterfaceClient p, Subject s) throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -445,7 +468,10 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	}
 
 	@Override
-	public ArrayList<Personne> getFollowers(InterfaceClient ct) throws RemoteException {
+	public ArrayList<Personne> getFollowers(InterfaceClient ct, Subject s) throws RemoteException {
+		if(!subjectPresent(s))
+			return null;
+		
 		ArrayList<Personne> a = new ArrayList<Personne>();
 		ArrayList<InterfaceClient> ins = listeFollower.get(ct.getPersonne().getPseudo());
 		if(ins != null)
@@ -478,7 +504,10 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 
 	@Override
 	public InterfacePrivee getService(Subject s) throws RemoteException {
-		return this;
+		if(listSubject.contains(s))
+			return this;
+		else 
+			return null;
 	}
 
 	@Override
@@ -488,5 +517,14 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 			retour += "\n" + tweet;
 		}
 		return retour;
+	}
+	
+	/**
+	 * Savoir si un utilisateur est connecté
+	 * @param s
+	 * @return
+	 */
+	public boolean subjectPresent(Subject s){
+		return listSubject.contains(s);
 	}
 }
