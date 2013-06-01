@@ -114,7 +114,7 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		jp.add(jp2);
 		jf.add(jp);                          
 		jf.setLocationRelativeTo(null);
-		jf.setVisible(true);	
+		jf.setVisible(true);
 	}
 	
 	/**
@@ -123,15 +123,14 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 *
 	 */
 	private class ActionListenerServeur implements ActionListener {
+
 		public void actionPerformed(ActionEvent event) {
 			Object obj = event.getSource();
 	
 			if(stop.equals(obj)){
-				
 			}
 			
 			if(refresh.equals(obj)){
-
 			}			
 		}
 	}
@@ -588,10 +587,17 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 	 * @return
 	 */
 	public boolean subjectPresent(Subject s){
-		return listSubject.contains(s);
+		boolean result = listSubject.contains(s);
+		
+		if(result) return true;
+		else {
+			displayMSG("tantive de connexion d'un supbject inconnu");
+			return false;
+		}
+		
 	}
 	
 	public void displayMSG(String msg){
-		textArea.setText(" - " + textArea.getText() + msg);
+		textArea.setText(textArea.getText() + "\n - " +msg);
 	}
 }
