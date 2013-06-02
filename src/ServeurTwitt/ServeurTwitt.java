@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 import ClientTwitt.ClientTwitt;
 import ClientTwitt.InterfaceClient;
 
-public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic, InterfacePrivee, InterfaceWebService{
+public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic, InterfacePrivee{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -503,12 +503,12 @@ public class ServeurTwitt extends UnicastRemoteObject implements InterfacePublic
 		return listUtilisateurs;
 	}
 
-	@Override
-	public String getListTopicsString() throws RemoteException {
-		String retour = "";
-		for (String tweet : getListTopics()) {
-			retour += "\n" + tweet;
-		}
-		return retour;
-	}
+//	@Override
+//	public String getListTopicsString() throws RemoteException {
+//		String retour = "";
+//		for (String tweet : getListTopics()) {
+//			retour += "\n" + tweet;
+//		}
+//		return retour;
+//	}
 }
